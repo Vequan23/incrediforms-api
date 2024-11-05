@@ -12,9 +12,13 @@ const router = express.Router();
 router.post('/register', schemaValidatorMiddleware(CREDENTIALS_SCHEMA), async (req, res) => {
   const { email, password } = req.body;
 
-  console.log(email, password);
-
   res.status(STATUS_CODES.OK).json({ message: 'User registered successfully' });
+});
+
+router.post('/login', schemaValidatorMiddleware(CREDENTIALS_SCHEMA), async (req, res) => {
+  const { email, password } = req.body;
+
+  res.status(STATUS_CODES.OK).json({ message: 'User logged in successfully' });
 });
 
 export default router;
