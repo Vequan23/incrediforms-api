@@ -4,11 +4,15 @@ FROM node:18-slim
 # Create app directory
 WORKDIR /usr/src/app
 
+# Install OpenSSL
+RUN apt-get update -y && \
+    apt-get install -y openssl
+
 # Copy package files
 COPY package*.json ./
 
-# Install yarn if not included in base image
-RUN npm install -g yarn
+# Enable corepack for yarn support
+RUN corepack enable
 
 # Copy yarn specific files
 COPY yarn.lock .
@@ -19,8 +23,11 @@ RUN yarn install
 # Copy source code
 COPY . .
 
+# Generate Prisma client
+RUN npx prisma generate
+
 # Expose port
-EXPOSE 8080
+EXPOSE 3000
 
 # Start the server
 CMD [ "yarn", "start" ]
