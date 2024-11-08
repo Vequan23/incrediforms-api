@@ -1,0 +1,3 @@
+interface CreateSubmissionDto {
+  text: string;
+}
