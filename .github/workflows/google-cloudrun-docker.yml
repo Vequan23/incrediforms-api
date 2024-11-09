@@ -55,5 +55,5 @@ jobs:
           secrets: |
             DATABASE_URL=db-url-secret:latest
 
-      - name: 'Show output'
+      - name: 'Show output...'
         run: echo ${{ steps.deploy.outputs.url }}
