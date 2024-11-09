@@ -7,7 +7,11 @@
     "start": "tsx watch src/app.ts",
     "test": "jest",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:migrate:prod": "prisma migrate deploy"
+    "prisma:migrate:prod": "prisma migrate deploy",
+    "build:docker": "docker build --platform linux/amd64 -t gcr.io/incrediforms-api/api .",
+    "push:docker": "docker push gcr.io/incrediforms-api/api",
+    "deploy:cloud-run": "gcloud run deploy incrediforms-api --image gcr.io/incrediforms-api/api --platform managed --region us-central1",
+    "deploy": "npm run build:docker && npm run push:docker && npm run deploy:cloud-run"
   },
   "author": "",
   "license": "ISC",

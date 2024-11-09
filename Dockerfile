@@ -27,7 +27,10 @@ COPY . .
 RUN npx prisma generate
 
 # Expose port
-EXPOSE 3000
+EXPOSE 8080
+
+ENV PORT=8080
+
 
 # Start the server
 CMD [ "yarn", "start" ]
