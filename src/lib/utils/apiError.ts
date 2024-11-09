@@ -19,6 +19,6 @@ export const errorHandler = (
   }
 
   return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
-    error: 'Internal server error'
+    error: 'Internal server error. Please try again later.'
   });
 };
