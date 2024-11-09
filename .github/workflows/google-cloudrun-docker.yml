@@ -8,9 +8,10 @@ on:
 
 env:
   PROJECT_ID: 'incrediforms-api'
-  REGION: 'us'
+  REGION: 'us-central1'
   SERVICE: 'incrediforms-api'
   WORKLOAD_IDENTITY_PROVIDER: 'projects/642822023513/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider'
+  REGISTRY: 'gcr.io'
 
 jobs:
   deploy:
@@ -31,12 +32,12 @@ jobs:
           workload_identity_provider: '${{ env.WORKLOAD_IDENTITY_PROVIDER }}'
           service_account: 'incrediforms-sa@incrediforms-api.iam.gserviceaccount.com'
 
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+
       - name: 'Docker Auth'
-        uses: 'docker/login-action@v3'
-        with:
-          username: 'oauth2accesstoken'
-          password: '${{ steps.auth.outputs.auth_token }}'
-          registry: 'gcr.io'
+        run: |
+          gcloud auth configure-docker gcr.io --quiet
 
       - name: 'Build and Push Container'
         run: |
