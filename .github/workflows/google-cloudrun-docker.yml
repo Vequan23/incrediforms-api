@@ -10,6 +10,7 @@ env:
   PROJECT_ID: 'incrediforms-api'
   REGION: 'us-central1'
   SERVICE: 'incrediforms-api'
+  SERVICE_ACCOUNT: 'incrediforms-sa@incrediforms-api.iam.gserviceaccount.com'
   WORKLOAD_IDENTITY_PROVIDER: 'projects/642822023513/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider'
   REGISTRY: 'gcr.io'
 
@@ -30,7 +31,7 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:
           workload_identity_provider: '${{ env.WORKLOAD_IDENTITY_PROVIDER }}'
-          service_account: 'incrediforms-sa@incrediforms-api.iam.gserviceaccount.com'
+          service_account: '${{ env.SERVICE_ACCOUNT }}'
 
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v2'
@@ -51,11 +52,11 @@ jobs:
           service: '${{ env.SERVICE }}'
           region: '${{ env.REGION }}'
           image: 'gcr.io/${{ env.PROJECT_ID }}/api:latest'
-          service_account: 'incrediforms-sa@incrediforms-api.iam.gserviceaccount.com'
+          service_account: '${{ env.SERVICE_ACCOUNT }}'
           env_vars: |
             NODE_ENV=production
           secrets: |
-            DATABASE_URL=projects/${{ env.PROJECT_ID }}/secrets/db-url-secret/versions/latest
+            DATABASE_URL:latest=projects/${{ env.PROJECT_ID }}/secrets/db-url-secret/versions/latest
 
       - name: 'Show output...'
         run: echo ${{ steps.deploy.outputs.url }}
