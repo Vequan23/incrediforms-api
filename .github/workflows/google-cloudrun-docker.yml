@@ -30,6 +30,7 @@ jobs:
         with:
           workload_identity_provider: '${{ env.WORKLOAD_IDENTITY_PROVIDER }}'
           service_account: 'incrediforms-sa@incrediforms-api.iam.gserviceaccount.com'
+          token_format: 'access_token'
 
       - name: 'Docker Auth'
         uses: 'docker/login-action@v3'
