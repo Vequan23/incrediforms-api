@@ -51,10 +51,11 @@ jobs:
           service: '${{ env.SERVICE }}'
           region: '${{ env.REGION }}'
           image: 'gcr.io/${{ env.PROJECT_ID }}/api:latest'
+          service_account: 'incrediforms-sa@incrediforms-api.iam.gserviceaccount.com'
           env_vars: |
             NODE_ENV=production
           secrets: |
-            DATABASE_URL=db-url-secret:latest
+            DATABASE_URL=projects/${{ env.PROJECT_ID }}/secrets/db-url-secret/versions/latest
 
       - name: 'Show output...'
         run: echo ${{ steps.deploy.outputs.url }}
