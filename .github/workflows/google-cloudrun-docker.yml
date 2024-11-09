@@ -35,8 +35,8 @@ jobs:
         uses: 'docker/login-action@v3'
         with:
           username: 'oauth2accesstoken'
-          password: '${{ steps.auth.outputs.access_token }}'
-          registry: 'gcr.io'
+          password: '${{ steps.auth.outputs.auth_token }}'
+          registry: '${{ env.REGION }}-docker.pkg.dev'
 
       - name: 'Build and Push Container'
         run: |
