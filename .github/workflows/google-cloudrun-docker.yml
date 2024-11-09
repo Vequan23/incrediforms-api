@@ -10,7 +10,7 @@ env:
   PROJECT_ID: 'incrediforms-api'
   REGION: 'us-central1'
   SERVICE: 'incrediforms-api'
-  WORKLOAD_IDENTITY_PROVIDER: 'projects/642822023513/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-oidc'
+  WORKLOAD_IDENTITY_PROVIDER: 'projects/642822023513/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider'
 
 jobs:
   deploy:
