@@ -35,13 +35,13 @@ jobs:
         uses: 'docker/login-action@v3'
         with:
           username: 'oauth2accesstoken'
-          password: '${{ steps.auth.outputs.auth_token }}'
-          registry: '${{ env.REGION }}-docker.pkg.dev'
+          password: '${{ steps.auth.outputs.access_token }}'
+          registry: 'gcr.io'
 
       - name: 'Build and Push Container'
         run: |
-          yarn build:docker
-          yarn push:docker
+          docker build -t gcr.io/${{ env.PROJECT_ID }}/api .
+          docker push gcr.io/${{ env.PROJECT_ID }}/api
 
       - name: 'Deploy to Cloud Run'
         id: 'deploy'
