@@ -56,7 +56,7 @@ jobs:
           env_vars: |
             NODE_ENV=production
           secrets: |
-            DATABASE_URL=projects/${{ env.PROJECT_ID }}/secrets/db-url-secret/versions/latest
+            DATABASE_URL=projects/${{ env.PROJECT_ID }}/secrets/db-url-secret/versions/latest:latest
 
       - name: 'Show output...'
         run: echo ${{ steps.deploy.outputs.url }}
