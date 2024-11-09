@@ -38,6 +38,11 @@ jobs:
           password: '${{ steps.auth.outputs.auth_token }}'
           registry: '${{ env.REGION }}-docker.pkg.dev'
 
+      - name: 'Build and Push Container'
+        run: |
+          yarn build:docker
+          yarn push:docker
+
       - name: 'Deploy to Cloud Run'
         id: 'deploy'
         uses: 'google-github-actions/deploy-cloudrun@v2'
