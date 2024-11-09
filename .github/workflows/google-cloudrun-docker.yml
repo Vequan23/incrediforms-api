@@ -36,12 +36,12 @@ jobs:
         with:
           username: 'oauth2accesstoken'
           password: '${{ steps.auth.outputs.auth_token }}'
-          registry: 'gcr.io'
+          registry: 'us-docker.pkg.dev'
 
       - name: 'Build and Push Container'
         run: |
-          docker build --platform linux/amd64 -t gcr.io/${{ env.PROJECT_ID }}/api .
-          docker push gcr.io/${{ env.PROJECT_ID }}/api
+          docker build --platform linux/amd64 -t us-docker.pkg.dev/${{ env.PROJECT_ID }}/api/api .
+          docker push us-docker.pkg.dev/${{ env.PROJECT_ID }}/api/api
 
       - name: 'Deploy to Cloud Run'
         id: 'deploy'
@@ -49,7 +49,7 @@ jobs:
         with:
           service: '${{ env.SERVICE }}'
           region: 'us-central1'
-          image: 'gcr.io/${{ env.PROJECT_ID }}/api'
+          image: 'us-docker.pkg.dev/${{ env.PROJECT_ID }}/api/api'
           env_vars: |
             NODE_ENV=production
           secrets: |
