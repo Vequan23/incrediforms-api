@@ -31,6 +31,7 @@ jobs:
         with:
           workload_identity_provider: '${{ env.WORKLOAD_IDENTITY_PROVIDER }}'
           service_account: 'incrediforms-sa@incrediforms-api.iam.gserviceaccount.com'
+          token_format: 'access_token'
 
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v2'
@@ -54,7 +55,7 @@ jobs:
           env_vars: |
             NODE_ENV=production
           secrets: |
-            DATABASE_URL=db-url-secret:latest
+            DATABASE_URL=projects/${{ env.PROJECT_ID }}/secrets/db-url-secret/versions/latest
 
       - name: 'Show output...'
         run: echo ${{ steps.deploy.outputs.url }}
