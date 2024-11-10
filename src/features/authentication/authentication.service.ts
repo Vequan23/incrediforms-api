@@ -17,7 +17,17 @@ const register = async (email: string, password: string) => {
     password: hashedPassword,
   };
 
-  const insertedUser = await usersService.createUser(newUser.email, newUser.password);
+  let insertedUser;
+  try {
+    insertedUser = await usersService.createUser(newUser.email, newUser.password);
+  } catch (error) {
+    console.error(error);
+    throw new ApiError(STATUS_CODES.INTERNAL_SERVER_ERROR, 'Failed to create user');
+  }
+
+  if (!insertedUser) {
+    throw new ApiError(STATUS_CODES.INTERNAL_SERVER_ERROR, 'Failed to create user');
+  }
 
   const token = jwt.sign({ id: insertedUser.id, email: insertedUser.email }, process.env.JWT_SECRET as string);
 
