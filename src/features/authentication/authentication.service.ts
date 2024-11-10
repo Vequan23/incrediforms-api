@@ -22,7 +22,7 @@ const register = async (email: string, password: string) => {
     insertedUser = await usersService.createUser(newUser.email, newUser.password);
   } catch (error) {
     console.error(error);
-    throw new ApiError(STATUS_CODES.INTERNAL_SERVER_ERROR, 'Failed to create user');
+    throw new ApiError(STATUS_CODES.INTERNAL_SERVER_ERROR, error.message);
   }
 
   if (!insertedUser) {
