@@ -63,6 +63,7 @@ jobs:
             NODE_ENV=production
           secrets: |
             DATABASE_URL=db-url-secret:latest
+            JWT_SECRET=jwt-secret:latest
 
       - name: 'Show output...'
         run: echo ${{ steps.deploy.outputs.url }}
