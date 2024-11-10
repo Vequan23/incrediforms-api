@@ -45,6 +45,12 @@ jobs:
           docker build --platform linux/amd64 -t gcr.io/${{ env.PROJECT_ID }}/api:latest .
           docker push gcr.io/${{ env.PROJECT_ID }}/api:latest
 
+      - name: 'Run Prisma Migrations'
+        run: |
+          npx prisma migrate deploy
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
       - name: 'Deploy to Cloud Run'
         id: 'deploy'
         uses: 'google-github-actions/deploy-cloudrun@v2'
