@@ -5,10 +5,6 @@ import { STATUS_CODES } from '@/src/lib/constants/statusCodes.constants';
 const getUserByEmail = async (email: string) => {
   const user = await db.user.findUnique({ where: { email } });
 
-  if (!user) {
-    throw new ApiError(STATUS_CODES.BAD_REQUEST, 'User not found');
-  }
-
   return user;
 };
 
