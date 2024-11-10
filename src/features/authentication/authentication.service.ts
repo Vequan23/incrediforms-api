@@ -5,14 +5,7 @@ import { ApiError } from '@/src/lib/utils/apiError';
 import { STATUS_CODES } from '@/src/lib/constants/statusCodes.constants';
 
 const register = async (email: string, password: string) => {
-  console.log('Database URL:', process.env.DATABASE_URL);
-  let user;
-
-  try {
-    user = await usersService.getUserByEmail(email);
-  } catch (error) {
-    throw new ApiError(STATUS_CODES.INTERNAL_SERVER_ERROR, error.message);
-  }
+  const user = await usersService.getUserByEmail(email);
 
   if (user) {
     throw new ApiError(STATUS_CODES.BAD_REQUEST, 'User already exists');
