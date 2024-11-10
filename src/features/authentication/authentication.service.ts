@@ -5,6 +5,7 @@ import { ApiError } from '@/src/lib/utils/apiError';
 import { STATUS_CODES } from '@/src/lib/constants/statusCodes.constants';
 
 const register = async (email: string, password: string) => {
+  console.log('Database URL:', process.env.DATABASE_URL);
   let user;
 
   try {
