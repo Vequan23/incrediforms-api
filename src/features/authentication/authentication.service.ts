@@ -5,7 +5,13 @@ import { ApiError } from '@/src/lib/utils/apiError';
 import { STATUS_CODES } from '@/src/lib/constants/statusCodes.constants';
 
 const register = async (email: string, password: string) => {
-  const user = await usersService.getUserByEmail(email);
+  let user;
+
+  try {
+    user = await usersService.getUserByEmail(email);
+  } catch (error) {
+    throw new ApiError(STATUS_CODES.INTERNAL_SERVER_ERROR, error.message);
+  }
 
   if (user) {
     throw new ApiError(STATUS_CODES.BAD_REQUEST, 'User already exists');
@@ -17,13 +23,7 @@ const register = async (email: string, password: string) => {
     password: hashedPassword,
   };
 
-  let insertedUser;
-  try {
-    insertedUser = await usersService.createUser(newUser.email, newUser.password);
-  } catch (error) {
-    console.error(error);
-    throw new ApiError(STATUS_CODES.INTERNAL_SERVER_ERROR, error.message);
-  }
+  const insertedUser = await usersService.createUser(newUser.email, newUser.password);
 
   if (!insertedUser) {
     throw new ApiError(STATUS_CODES.INTERNAL_SERVER_ERROR, 'Failed to create user');
