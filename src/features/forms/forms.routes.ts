@@ -1,52 +1,63 @@
 import express from 'express';
 
+// Middleware imports
 import { schemaValidatorMiddleware } from '@/middleware/schemaValidatorMiddleware';
-
-import formsController from './forms.controller';
 import { requiresAuthMiddleware } from '@/src/lib/middleware/requiresAuthMiddleware';
-import { CREATE_FORM_SCHEMA, UPDATE_FORM_SCHEMA } from './forms.schemas';
+
+// Controller imports
+import formsController from './forms.controller';
 import fieldsController from './fields/fields.controller';
-import { CREATE_FIELD_SCHEMA, UPDATE_FIELD_SCHEMA } from './fields/fields.schemas';
 import submissionsController from './submissions/submissions.controller';
+
+// Schema imports
+import { CREATE_FORM_SCHEMA, UPDATE_FORM_SCHEMA } from './forms.schemas';
+import { CREATE_FIELD_SCHEMA, UPDATE_FIELD_SCHEMA } from './fields/fields.schemas';
+
 const router = express.Router();
 
-router.post(
-  '/',
-  schemaValidatorMiddleware(CREATE_FORM_SCHEMA),
-  requiresAuthMiddleware,
-  formsController.create
-);
+// Form routes
+router
+  .route('/')
+  .post(
+    schemaValidatorMiddleware(CREATE_FORM_SCHEMA),
+    requiresAuthMiddleware,
+    formsController.create
+  )
+  .get(requiresAuthMiddleware, formsController.listForms);
 
-router.patch(
-  '/:id',
-  schemaValidatorMiddleware(UPDATE_FORM_SCHEMA),
-  requiresAuthMiddleware,
-  formsController.update
-);
+router
+  .route('/:id')
+  .get(requiresAuthMiddleware, formsController.getById)
+  .patch(
+    schemaValidatorMiddleware(UPDATE_FORM_SCHEMA),
+    requiresAuthMiddleware,
+    formsController.update
+  )
+  .delete(requiresAuthMiddleware, formsController.deleteForm);
 
-router.get('/:id', requiresAuthMiddleware, formsController.getById);
+// Field routes
+router
+  .route('/:id/fields')
+  .get(requiresAuthMiddleware, fieldsController.listFields)
+  .post(
+    schemaValidatorMiddleware(CREATE_FIELD_SCHEMA),
+    requiresAuthMiddleware,
+    fieldsController.createField
+  );
 
-router.post(
-  '/:id/fields',
-  schemaValidatorMiddleware(CREATE_FIELD_SCHEMA),
-  requiresAuthMiddleware,
-  fieldsController.createField
-);
+router
+  .route('/:id/fields/:fieldId')
+  .patch(
+    schemaValidatorMiddleware(UPDATE_FIELD_SCHEMA),
+    requiresAuthMiddleware,
+    fieldsController.updateField
+  )
+  .delete(requiresAuthMiddleware, fieldsController.deleteField);
 
-router.patch(
-  '/:id/fields/:fieldId',
-  schemaValidatorMiddleware(UPDATE_FIELD_SCHEMA),
-  requiresAuthMiddleware,
-  fieldsController.updateField
-);
-
-router.delete(
-  '/:id/fields/:fieldId',
-  requiresAuthMiddleware,
-  fieldsController.deleteField
-);
-
-router.get('/:id/submissions', requiresAuthMiddleware, submissionsController.listSubmissions);
-router.post('/:id/submissions', requiresAuthMiddleware, submissionsController.createSubmission);
+// Submission routes
+router
+  .route('/:id/submissions')
+  .get(requiresAuthMiddleware, submissionsController.listSubmissions)
+  .post(requiresAuthMiddleware, submissionsController.createSubmission);
 
 export default router;

@@ -16,10 +16,10 @@ export const INPUT_TYPES = [
 export const CREATE_FIELD_SCHEMA = Joi.object({
   name: Joi.string().required(),
   label: Joi.string().required(),
+  type: Joi.string().valid(...INPUT_TYPES).required(),
   description: Joi.string(),
-  required: Joi.boolean().required(),
+  required: Joi.boolean(),
   order: Joi.number(),
-  type: Joi.string().valid(...INPUT_TYPES),
 });
 
 export const UPDATE_FIELD_SCHEMA = Joi.object({

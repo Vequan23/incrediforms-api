@@ -26,4 +26,24 @@ const getById = async (req: RequestWithUser, res: Response) => {
   res.status(STATUS_CODES.OK).json(form);
 };
 
-export default { create: asyncWrapper(create), update: asyncWrapper(update), getById: asyncWrapper(getById) };
+const listForms = async (req: RequestWithUser, res: Response) => {
+  const userId = req.user!.id;
+  const nameParam = req.query.name as string | undefined;
+  const forms = await formsService.listForms(userId, nameParam);
+
+  res.status(STATUS_CODES.OK).json(forms);
+};
+
+const deleteForm = async (req: RequestWithUser, res: Response) => {
+  const userId = req.user!.id;
+  try {
+    const form = await formsService.deleteForm(userId, req.params.id);
+
+    res.status(STATUS_CODES.OK).json(form);
+  } catch (error) {
+    console.error(error);
+    res.status(STATUS_CODES.BAD_REQUEST).json({ message: 'Failed to delete form' });
+  }
+};
+
+export default { create: asyncWrapper(create), update: asyncWrapper(update), getById: asyncWrapper(getById), listForms: asyncWrapper(listForms), deleteForm: asyncWrapper(deleteForm) };

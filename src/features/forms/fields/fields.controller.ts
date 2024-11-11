@@ -4,6 +4,14 @@ import { Response, Request } from 'express';
 import fieldsService from './fields.service';
 import { asyncWrapper } from '@/src/lib/utils/asyncWrapper';
 
+
+const listFields = async (req: Request, res: Response) => {
+  const { id: formId } = req.params;
+
+  const fields = await fieldsService.listFields(formId);
+  res.status(STATUS_CODES.OK).json(fields);
+};
+
 const createField = async (req: Request, res: Response) => {
   const { id: formId } = req.params;
 
@@ -19,11 +27,11 @@ const updateField = async (req: Request, res: Response) => {
 };
 
 const deleteField = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const { fieldId } = req.params;
 
-  const field = await fieldsService.deleteField(id);
+  const field = await fieldsService.deleteField(fieldId);
   res.status(STATUS_CODES.OK).json(field);
 };
 
-export default { createField: asyncWrapper(createField), updateField: asyncWrapper(updateField), deleteField: asyncWrapper(deleteField) };
+export default { createField: asyncWrapper(createField), updateField: asyncWrapper(updateField), deleteField: asyncWrapper(deleteField), listFields: asyncWrapper(listFields) };
 

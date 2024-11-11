@@ -36,4 +36,14 @@ const getFormById = async (id: string) => {
   return form;
 };
 
-export default { createForm, updateForm, getFormById };
+const listForms = async (userId: string, nameParam?: string) => {
+  return db.form.findMany({ where: { user_id: userId, name: { contains: nameParam } } });
+};
+
+const deleteForm = async (userId: string, formId: string) => {
+  return db.form.delete({
+    where: { id: formId, user_id: userId },
+  });
+};
+
+export default { createForm, updateForm, getFormById, listForms, deleteForm };

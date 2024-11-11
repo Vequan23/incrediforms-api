@@ -34,6 +34,10 @@ const updateField = async (fieldId: string, form: UpdateFieldDto) => {
   });
 };
 
+const listFields = async (formId: string) => {
+  return db.field.findMany({ where: { form_id: formId } });
+};
+
 const deleteField = async (id: string) => {
   const existingField = await db.field.findUnique({
     where: { id },
@@ -48,4 +52,4 @@ const deleteField = async (id: string) => {
   });
 };
 
-export default { createField, updateField, deleteField };
+export default { createField, updateField, deleteField, listFields };
