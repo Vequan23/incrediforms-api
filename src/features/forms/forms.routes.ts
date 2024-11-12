@@ -35,6 +35,12 @@ router
   )
   .delete(requiresAuthMiddleware, formsController.deleteForm);
 
+
+router
+  .route('/:id/published')
+  .get(requiresAuthMiddleware, formsController.getPublishedForm)
+  .post(requiresAuthMiddleware, formsController.publishForm);
+
 // Field routes
 router
   .route('/:id/fields')

@@ -46,4 +46,18 @@ const deleteForm = async (req: RequestWithUser, res: Response) => {
   }
 };
 
-export default { create: asyncWrapper(create), update: asyncWrapper(update), getById: asyncWrapper(getById), listForms: asyncWrapper(listForms), deleteForm: asyncWrapper(deleteForm) };
+const publishForm = async (req: RequestWithUser, res: Response) => {
+  const userId = req.user!.id;
+  const encodedContent = req.body.encoded_content;
+  const form = await formsService.publishForm(userId, req.params.id, encodedContent);
+
+  res.status(STATUS_CODES.OK).json(form);
+};
+
+const getPublishedForm = async (req: RequestWithUser, res: Response) => {
+  const form = await formsService.getPublishedForm(req.params.id);
+
+  res.status(STATUS_CODES.OK).json(form);
+};
+
+export default { create: asyncWrapper(create), update: asyncWrapper(update), getById: asyncWrapper(getById), listForms: asyncWrapper(listForms), deleteForm: asyncWrapper(deleteForm), publishForm: asyncWrapper(publishForm), getPublishedForm: asyncWrapper(getPublishedForm) };

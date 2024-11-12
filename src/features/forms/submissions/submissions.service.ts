@@ -11,8 +11,9 @@ const listSubmissions = async (formId: string) => {
 };
 
 const createSubmission = async (formId: string, userId: string, submission: CreateSubmissionDto) => {
+  const stringifiedSubmission = JSON.stringify(submission);
   const newSubmission = await db.submission.create({
-    data: { ...submission, form_id: formId, user_id: userId },
+    data: { text: stringifiedSubmission, form_id: formId, user_id: userId },
   });
 
   if (!newSubmission) {

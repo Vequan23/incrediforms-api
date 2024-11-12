@@ -46,4 +46,16 @@ const deleteForm = async (userId: string, formId: string) => {
   });
 };
 
-export default { createForm, updateForm, getFormById, listForms, deleteForm };
+const publishForm = async (userId: string, formId: string, encodedContent: string) => {
+  return db.publishedForm.create({
+    data: { form_id: formId, encoded_content: encodedContent, user_id: userId },
+  });
+};
+
+const getPublishedForm = async (formId: string) => {
+  return db.publishedForm.findFirst({
+    where: { form_id: formId },
+  });
+};
+
+export default { createForm, updateForm, getFormById, listForms, deleteForm, publishForm, getPublishedForm };
