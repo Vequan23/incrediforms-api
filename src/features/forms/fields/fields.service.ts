@@ -19,9 +19,9 @@ const createField = async (formId: string, form: CreateFieldDto) => {
   return field;
 };
 
-const updateField = async (fieldId: string, form: UpdateFieldDto) => {
+const updateField = async (field_id: string, form: UpdateFieldDto) => {
   const existingField = await db.field.findUnique({
-    where: { id: fieldId },
+    where: { id: field_id },
   });
 
   if (!existingField) {
@@ -29,13 +29,24 @@ const updateField = async (fieldId: string, form: UpdateFieldDto) => {
   }
 
   return db.field.update({
-    where: { id: fieldId },
+    where: { id: field_id },
     data: form,
   });
 };
 
 const listFields = async (formId: string) => {
   return db.field.findMany({ where: { form_id: formId } });
+};
+
+const reorderFields = async (field_ids: string[]) => {
+  return db.$transaction(
+    field_ids.map((id, index) =>
+      db.field.update({
+        where: { id },
+        data: { order: index },
+      })
+    )
+  );
 };
 
 const deleteField = async (id: string) => {
@@ -52,4 +63,4 @@ const deleteField = async (id: string) => {
   });
 };
 
-export default { createField, updateField, deleteField, listFields };
+export default { createField, updateField, deleteField, listFields, reorderFields };

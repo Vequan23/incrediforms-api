@@ -11,7 +11,7 @@ import submissionsController from './submissions/submissions.controller';
 
 // Schema imports
 import { CREATE_FORM_SCHEMA, UPDATE_FORM_SCHEMA } from './forms.schemas';
-import { CREATE_FIELD_SCHEMA, UPDATE_FIELD_SCHEMA } from './fields/fields.schemas';
+import { CREATE_FIELD_SCHEMA, UPDATE_FIELD_SCHEMA, REORDER_FIELDS_SCHEMA } from './fields/fields.schemas';
 
 const router = express.Router();
 
@@ -52,7 +52,15 @@ router
   );
 
 router
-  .route('/:id/fields/:fieldId')
+  .route('/:id/fields/reorder')
+  .patch(
+    schemaValidatorMiddleware(REORDER_FIELDS_SCHEMA),
+    requiresAuthMiddleware,
+    fieldsController.reorderFields
+  );
+
+router
+  .route('/:id/fields/:field_id')
   .patch(
     schemaValidatorMiddleware(UPDATE_FIELD_SCHEMA),
     requiresAuthMiddleware,

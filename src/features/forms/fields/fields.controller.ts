@@ -20,18 +20,25 @@ const createField = async (req: Request, res: Response) => {
 };
 
 const updateField = async (req: Request, res: Response) => {
-  const { fieldId } = req.params;
+  const { field_id } = req.params;
 
-  const field = await fieldsService.updateField(fieldId, req.body);
+  const field = await fieldsService.updateField(field_id, req.body);
   res.status(STATUS_CODES.OK).json(field);
 };
 
 const deleteField = async (req: Request, res: Response) => {
-  const { fieldId } = req.params;
+  const { field_id } = req.params;
 
-  const field = await fieldsService.deleteField(fieldId);
+  const field = await fieldsService.deleteField(field_id);
   res.status(STATUS_CODES.OK).json(field);
 };
 
-export default { createField: asyncWrapper(createField), updateField: asyncWrapper(updateField), deleteField: asyncWrapper(deleteField), listFields: asyncWrapper(listFields) };
+const reorderFields = async (req: Request, res: Response) => {
+  const { field_ids } = req.body;
+
+  const fields = await fieldsService.reorderFields(field_ids);
+  res.status(STATUS_CODES.OK).json(fields);
+};
+
+export default { createField: asyncWrapper(createField), updateField: asyncWrapper(updateField), deleteField: asyncWrapper(deleteField), listFields: asyncWrapper(listFields), reorderFields: asyncWrapper(reorderFields) };
 
