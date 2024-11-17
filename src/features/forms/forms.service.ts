@@ -58,4 +58,12 @@ const getPublishedForm = async (formId: string) => {
   });
 };
 
-export default { createForm, updateForm, getFormById, listForms, deleteForm, publishForm, getPublishedForm };
+export default {
+  createForm,
+  updateForm,
+  getFormById,
+  listForms,
+  deleteForm,
+  publishForm,
+  getPublishedForm,
+};

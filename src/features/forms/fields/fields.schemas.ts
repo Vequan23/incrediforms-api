@@ -29,6 +29,7 @@ export const UPDATE_FIELD_SCHEMA = Joi.object({
   required: Joi.boolean(),
   order: Joi.number(),
   type: Joi.string().valid(...INPUT_TYPES),
+  options: Joi.array().items(Joi.string()),
 });
 
 export const REORDER_FIELDS_SCHEMA = Joi.object({

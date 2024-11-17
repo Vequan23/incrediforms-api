@@ -68,6 +68,10 @@ router
   )
   .delete(requiresAuthMiddleware, fieldsController.deleteField);
 
+router
+  .route('/:id/fields/:field_id/options')
+  .get(requiresAuthMiddleware, fieldsController.listFieldOptions);
+
 // Submission routes
 router
   .route('/:id/submissions')

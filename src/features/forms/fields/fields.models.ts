@@ -5,6 +5,7 @@ interface CreateFieldDto {
   order: number;
   name: string;
   type: string;
+  options?: string[];
 }
 
 

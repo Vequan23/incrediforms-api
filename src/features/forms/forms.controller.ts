@@ -60,4 +60,12 @@ const getPublishedForm = async (req: RequestWithUser, res: Response) => {
   res.status(STATUS_CODES.OK).json(form);
 };
 
-export default { create: asyncWrapper(create), update: asyncWrapper(update), getById: asyncWrapper(getById), listForms: asyncWrapper(listForms), deleteForm: asyncWrapper(deleteForm), publishForm: asyncWrapper(publishForm), getPublishedForm: asyncWrapper(getPublishedForm) };
+export default {
+  create: asyncWrapper(create),
+  update: asyncWrapper(update),
+  getById: asyncWrapper(getById),
+  listForms: asyncWrapper(listForms),
+  deleteForm: asyncWrapper(deleteForm),
+  publishForm: asyncWrapper(publishForm),
+  getPublishedForm: asyncWrapper(getPublishedForm),
+};

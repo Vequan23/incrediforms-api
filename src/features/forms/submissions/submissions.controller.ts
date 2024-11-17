@@ -32,4 +32,7 @@ const createSubmission = async (req: CreateSubmissionRequest, res: Response) => 
 
 };
 
-export default { listSubmissions: asyncWrapper(listSubmissions), createSubmission: asyncWrapper(createSubmission) };
+export default {
+  listSubmissions: asyncWrapper(listSubmissions),
+  createSubmission: asyncWrapper(createSubmission),
+};

@@ -12,6 +12,13 @@ const listFields = async (req: Request, res: Response) => {
   res.status(STATUS_CODES.OK).json(fields);
 };
 
+const listFieldOptions = async (req: Request, res: Response) => {
+  const { field_id } = req.params;
+
+  const options = await fieldsService.listFieldOptions(field_id);
+  res.status(STATUS_CODES.OK).json(options);
+};
+
 const createField = async (req: Request, res: Response) => {
   const { id: formId } = req.params;
 
@@ -40,5 +47,11 @@ const reorderFields = async (req: Request, res: Response) => {
   res.status(STATUS_CODES.OK).json(fields);
 };
 
-export default { createField: asyncWrapper(createField), updateField: asyncWrapper(updateField), deleteField: asyncWrapper(deleteField), listFields: asyncWrapper(listFields), reorderFields: asyncWrapper(reorderFields) };
-
+export default {
+  createField: asyncWrapper(createField),
+  updateField: asyncWrapper(updateField),
+  deleteField: asyncWrapper(deleteField),
+  listFields: asyncWrapper(listFields),
+  reorderFields: asyncWrapper(reorderFields),
+  listFieldOptions: asyncWrapper(listFieldOptions),
+};
