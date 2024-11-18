@@ -47,8 +47,23 @@ const deleteForm = async (userId: string, formId: string) => {
 };
 
 const publishForm = async (userId: string, formId: string, encodedContent: string) => {
+  const existingPublishedForm = await db.publishedForm.findFirst({
+    where: { form_id: formId, user_id: userId },
+  });
+
+  if (existingPublishedForm) {
+    return db.publishedForm.update({
+      where: { id: existingPublishedForm.id },
+      data: { encoded_content: encodedContent },
+    });
+  }
+
   return db.publishedForm.create({
-    data: { form_id: formId, encoded_content: encodedContent, user_id: userId },
+    data: {
+      form_id: formId,
+      user_id: userId,
+      encoded_content: encodedContent,
+    },
   });
 };
 

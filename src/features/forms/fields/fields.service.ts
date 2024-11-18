@@ -52,7 +52,18 @@ const updateField = async (field_id: string, field: UpdateFieldDto) => {
 };
 
 const listFields = async (formId: string) => {
-  return db.field.findMany({ where: { form_id: formId } });
+  const fields = await db.field.findMany({
+    where: { form_id: formId },
+    include: {
+      FieldOption: true,
+    },
+  });
+
+  return fields.map((field) => ({
+    ...field,
+    options: field.FieldOption,
+    FieldOption: undefined,
+  }));
 };
 
 const reorderFields = async (field_ids: string[]) => {
