@@ -8,12 +8,16 @@ import authenticationRoutes from '@/features/authentication/authentication.route
 import formsRoutes from '@/features/forms/forms.routes';
 import { errorHandler } from '@/src/lib/utils/apiError';
 
+const LOCAL_FRONTEND_URL = 'http://localhost:3006';
+const PROD_FRONTEND_URL = 'https://incrediforms.vercel.app/';
+
 app.use(cors({
-  origin: true, // Allow all origins
+  origin: process.env.NODE_ENV === 'production' ? PROD_FRONTEND_URL : LOCAL_FRONTEND_URL,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+  allowedHeaders: ['Content-Type', 'Authorization'],
+})
+);
 
 app.use(express.json());
 app.use('/auth', authenticationRoutes);
