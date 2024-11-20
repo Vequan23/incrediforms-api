@@ -38,7 +38,7 @@ router
 
 router
   .route('/:id/published')
-  .get(requiresAuthMiddleware, formsController.getPublishedForm)
+  .get(formsController.getPublishedForm)
   .post(requiresAuthMiddleware, formsController.publishForm);
 
 // Field routes
