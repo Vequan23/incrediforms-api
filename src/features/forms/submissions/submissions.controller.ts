@@ -24,11 +24,10 @@ const listSubmissions = async (req: ListSubmissionsRequest, res: Response) => {
 };
 
 const createSubmission = async (req: CreateSubmissionRequest, res: Response) => {
-  const { id: formId } = req.params;
-  const userId = req.user!.id;
 
   //const submission = await submissionsService.createSubmission(formId, userId, req.body);
-  res.status(STATUS_CODES.OK).json('Submission created (TEMP)');
+
+  res.status(STATUS_CODES.OK).json({ message: 'Submission created (TEMP)' });
 };
 
 export default {
