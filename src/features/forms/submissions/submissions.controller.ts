@@ -27,9 +27,8 @@ const createSubmission = async (req: CreateSubmissionRequest, res: Response) => 
   const { id: formId } = req.params;
   const userId = req.user!.id;
 
-  const submission = await submissionsService.createSubmission(formId, userId, req.body);
-  res.status(STATUS_CODES.OK).json(submission);
-
+  //const submission = await submissionsService.createSubmission(formId, userId, req.body);
+  res.status(STATUS_CODES.OK).json('Submission created (TEMP)');
 };
 
 export default {
