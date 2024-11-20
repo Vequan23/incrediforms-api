@@ -76,6 +76,6 @@ router
 router
   .route('/:id/submissions')
   .get(requiresAuthMiddleware, submissionsController.listSubmissions)
-  .post(requiresAuthMiddleware, submissionsController.createSubmission);
+  .post(submissionsController.createSubmission);
 
 export default router;
