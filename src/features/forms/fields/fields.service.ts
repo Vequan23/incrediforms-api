@@ -53,6 +53,7 @@ const updateField = async (field_id: string, field: UpdateFieldDto) => {
 
 const listFields = async (formId: string) => {
   const fields = await db.field.findMany({
+    orderBy: { order: 'asc' },
     where: { form_id: formId },
     include: {
       FieldOption: true,
