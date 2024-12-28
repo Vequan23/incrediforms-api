@@ -10,7 +10,7 @@ import fieldsController from './fields/fields.controller';
 import submissionsController from './submissions/submissions.controller';
 
 // Schema imports
-import { CREATE_FORM_SCHEMA, UPDATE_FORM_SCHEMA } from './forms.schemas';
+import { CREATE_FORM_SCHEMA, CREATE_PROMPT_FILE_SCHEMA, UPDATE_FORM_SCHEMA } from './forms.schemas';
 import { CREATE_FIELD_SCHEMA, UPDATE_FIELD_SCHEMA, REORDER_FIELDS_SCHEMA } from './fields/fields.schemas';
 
 const router = express.Router();
@@ -40,6 +40,14 @@ router
   .route('/:id/published')
   .get(formsController.getPublishedForm)
   .post(requiresAuthMiddleware, formsController.publishForm);
+
+router
+  .route('/:id/prompt-file')
+  .post(
+    schemaValidatorMiddleware(CREATE_PROMPT_FILE_SCHEMA),
+    requiresAuthMiddleware,
+    formsController.createPromptFile
+  );
 
 // Field routes
 router

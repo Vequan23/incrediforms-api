@@ -1,7 +1,8 @@
 import db from '@/services/db';
-import { CreateFormDto, UpdateFormDto } from './forms.models';
+import { CreateFormDto, CreatePromptFileDto, UpdateFormDto } from './forms.models';
 import { STATUS_CODES } from '@/src/lib/constants/statusCodes.constants';
 import { ApiError } from '@/src/lib/utils/apiError';
+import { extractTextFromBase64Pdf } from './extractTextFromBase64Pdf';
 
 const createForm = async (userId: string, form: CreateFormDto) => {
   return db.form.create({
@@ -73,6 +74,25 @@ const getPublishedForm = async (formId: string) => {
   });
 };
 
+const createPromptFile = async (formId: string, promptFile: CreatePromptFileDto) => {
+  const fileMetadata = {
+    title: promptFile.title,
+    base64_content: promptFile.base64_content,
+    extracted_text: await extractTextFromBase64Pdf(promptFile.base64_content),
+  };
+
+  try {
+    const createdPromptFile = await db.promptFile.create({
+      data: { form_id: formId, ...fileMetadata },
+    });
+
+    return createdPromptFile;
+  } catch (error) {
+    console.error(error);
+    throw new ApiError(STATUS_CODES.BAD_REQUEST, 'Failed to create prompt file');
+  }
+};
+
 export default {
   createForm,
   updateForm,
@@ -81,4 +101,5 @@ export default {
   deleteForm,
   publishForm,
   getPublishedForm,
+  createPromptFile,
 };

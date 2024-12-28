@@ -60,6 +60,12 @@ const getPublishedForm = async (req: RequestWithUser, res: Response) => {
   res.status(STATUS_CODES.OK).json(form);
 };
 
+const createPromptFile = async (req: RequestWithUser, res: Response) => {
+  const promptFile = await formsService.createPromptFile(req.params.id, req.body);
+
+  res.status(STATUS_CODES.OK).json(promptFile);
+};
+
 export default {
   create: asyncWrapper(create),
   update: asyncWrapper(update),
@@ -68,4 +74,5 @@ export default {
   deleteForm: asyncWrapper(deleteForm),
   publishForm: asyncWrapper(publishForm),
   getPublishedForm: asyncWrapper(getPublishedForm),
+  createPromptFile: asyncWrapper(createPromptFile),
 };

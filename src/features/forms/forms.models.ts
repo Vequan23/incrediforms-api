@@ -29,4 +29,11 @@ interface UpdateFormResponse {
   file: string;
 }
 
-export { CreateFormDto, CreateFormResponse, UpdateFormDto, UpdateFormResponse };
+interface CreatePromptFileDto {
+  title: string;
+  base64_content: string;
+}
+
+
+
+export { CreateFormDto, CreateFormResponse, UpdateFormDto, UpdateFormResponse, CreatePromptFileDto };

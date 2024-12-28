@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "PromptFile" ALTER COLUMN "base64_content" DROP NOT NULL,
+ALTER COLUMN "url" DROP NOT NULL;

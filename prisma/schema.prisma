@@ -37,6 +37,7 @@ model Form {
   Field         Field[]
   Submission    Submission[]
   PublishedForm PublishedForm[]
+  PromptFile    PromptFile[]
 }
 
 model Field {
@@ -86,4 +87,15 @@ model StripeUser {
   user_id    String
   stripe_id  String
   created_at DateTime @default(now())
+}
+
+model PromptFile {
+  id         String   @id @default(uuid())
+  form       Form     @relation(fields: [form_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  form_id    String
+  created_at DateTime @default(now())
+  title      String
+  extracted_text String
+  base64_content String?
+  url String?
 }

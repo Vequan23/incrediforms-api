@@ -14,4 +14,9 @@ const UPDATE_FORM_SCHEMA = Joi.object({
   file: Joi.string().optional(),
 });
 
-export { CREATE_FORM_SCHEMA, UPDATE_FORM_SCHEMA };
+const CREATE_PROMPT_FILE_SCHEMA = Joi.object({
+  title: Joi.string().required(),
+  base64_content: Joi.string().required(),
+});
+
+export { CREATE_FORM_SCHEMA, UPDATE_FORM_SCHEMA, CREATE_PROMPT_FILE_SCHEMA };
