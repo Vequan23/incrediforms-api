@@ -28,17 +28,33 @@ const updateForm = async (userId: string, formId: string, form: UpdateFormDto) =
 const getFormById = async (id: string) => {
   const form = await db.form.findUnique({
     where: { id },
+    include: {
+      PromptFile: true,
+    },
   });
 
   if (!form) {
     throw new ApiError(STATUS_CODES.BAD_REQUEST, 'Form not found');
   }
 
-  return form;
+  return {
+    ...form,
+    prompt_file: form.PromptFile,
+    PromptFile: undefined
+  };
 };
 
 const listForms = async (userId: string, nameParam?: string) => {
-  return db.form.findMany({ where: { user_id: userId, name: { contains: nameParam } } });
+  const forms = await db.form.findMany({
+    where: { user_id: userId, name: { contains: nameParam } },
+    include: { PromptFile: true },
+  });
+
+  return forms.map(form => ({
+    ...form,
+    prompt_file: form.PromptFile,
+    PromptFile: undefined
+  }));
 };
 
 const deleteForm = async (userId: string, formId: string) => {
