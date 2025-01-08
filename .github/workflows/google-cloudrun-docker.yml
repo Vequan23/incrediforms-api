@@ -63,6 +63,7 @@ jobs:
           secrets: |
             DATABASE_URL=db-url-secret:latest
             JWT_SECRET=jwt-secret:latest
+            SLACK_WEBHOOK_URL=slack-webhook-secret:latest
 
       - name: 'Show output...'
         run: echo ${{ steps.deploy.outputs.url }}

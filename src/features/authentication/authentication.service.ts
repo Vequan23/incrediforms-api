@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { ApiError } from '@/src/lib/utils/apiError';
 import { STATUS_CODES } from '@/src/lib/constants/statusCodes.constants';
+import { notificationsService } from "../notifications/notifications.service";
 
 const register = async (email: string, password: string) => {
   const user = await usersService.getUserByEmail(email);
@@ -24,6 +25,8 @@ const register = async (email: string, password: string) => {
   }
 
   const token = jwt.sign({ id: insertedUser.id, email: insertedUser.email }, process.env.JWT_SECRET as string);
+
+  await notificationsService.sendNewUserNotification(insertedUser);
 
   return {
     token,
