@@ -9,7 +9,7 @@ import formsRoutes from '@/features/forms/forms.routes';
 import { errorHandler } from '@/src/lib/utils/apiError';
 
 const LOCAL_FRONTEND_URL = 'http://localhost:3006';
-const PROD_FRONTEND_URL = 'https://incrediforms.com';
+const PROD_FRONTEND_URL = 'https://www.incrediforms.com';
 
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' ? PROD_FRONTEND_URL : LOCAL_FRONTEND_URL,
