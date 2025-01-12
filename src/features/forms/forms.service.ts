@@ -80,6 +80,7 @@ const publishForm = async (userId: string, formId: string, encodedContent: strin
       form_id: formId,
       user_id: userId,
       encoded_content: encodedContent,
+      last_published_at: new Date(),
     },
   });
 };
