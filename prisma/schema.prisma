@@ -33,6 +33,7 @@ model Form {
   description   String?
   prompt        String?
   file          String?
+  theme_color   String?
   created_at    DateTime        @default(now())
   Field         Field[]
   Submission    Submission[]

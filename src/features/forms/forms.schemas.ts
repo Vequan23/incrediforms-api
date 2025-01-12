@@ -12,6 +12,7 @@ const UPDATE_FORM_SCHEMA = Joi.object({
   description: Joi.string().optional(),
   prompt: Joi.string().optional(),
   file: Joi.string().optional(),
+  theme_color: Joi.string().optional(),
 });
 
 const CREATE_PROMPT_FILE_SCHEMA = Joi.object({
