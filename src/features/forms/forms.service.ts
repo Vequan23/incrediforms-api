@@ -71,7 +71,7 @@ const publishForm = async (userId: string, formId: string, encodedContent: strin
   if (existingPublishedForm) {
     return db.publishedForm.update({
       where: { id: existingPublishedForm.id },
-      data: { encoded_content: encodedContent },
+      data: { encoded_content: encodedContent, last_published_at: new Date() },
     });
   }
 
