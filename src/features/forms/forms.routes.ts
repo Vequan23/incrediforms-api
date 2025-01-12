@@ -47,7 +47,12 @@ router
     schemaValidatorMiddleware(CREATE_PROMPT_FILE_SCHEMA),
     requiresAuthMiddleware,
     formsController.createPromptFile
+
   );
+
+router
+  .route('/:id/prompt-file/:promptFileId')
+  .delete(requiresAuthMiddleware, formsController.deletePromptFile);
 
 // Field routes
 router

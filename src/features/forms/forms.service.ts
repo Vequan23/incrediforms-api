@@ -104,9 +104,22 @@ const createPromptFile = async (formId: string, promptFile: CreatePromptFileDto)
 
     return createdPromptFile;
   } catch (error) {
-    console.error(error);
     throw new ApiError(STATUS_CODES.BAD_REQUEST, 'Failed to create prompt file');
   }
+};
+
+const deletePromptFile = async (formId: string, promptFileId: string) => {
+  const promptFile = await db.promptFile.findUnique({
+    where: { id: promptFileId, form_id: formId },
+  });
+
+  if (!promptFile) {
+    throw new ApiError(STATUS_CODES.BAD_REQUEST, 'Prompt file not found');
+  }
+
+  return db.promptFile.delete({
+    where: { id: promptFileId, form_id: formId },
+  });
 };
 
 export default {
@@ -118,4 +131,5 @@ export default {
   publishForm,
   getPublishedForm,
   createPromptFile,
+  deletePromptFile,
 };
