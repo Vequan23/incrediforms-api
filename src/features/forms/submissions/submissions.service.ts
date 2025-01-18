@@ -1,6 +1,7 @@
 import db from '@/services/db';
 import { ApiError } from '@/src/lib/utils/apiError';
 import { STATUS_CODES } from '@/src/lib/constants/statusCodes.constants';
+import { callWebhook } from '../webhook-integrator/webhooks.service';
 
 const listSubmissions = async (formId: string) => {
   const submissions = await db.submission.findMany({
@@ -19,6 +20,8 @@ const createSubmission = async (formId: string, submission: CreateSubmissionDto)
   if (!newSubmission) {
     throw new ApiError(STATUS_CODES.BAD_REQUEST, 'Failed to create submission');
   }
+
+  await callWebhook(formId, submission);
 
   return newSubmission;
 };

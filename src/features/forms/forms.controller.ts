@@ -4,7 +4,6 @@ import formsService from './forms.service';
 import { RequestWithUser } from '@/src/lib/models/models';
 import { asyncWrapper } from '@/src/lib/utils/asyncWrapper';
 
-
 const create = async (req: RequestWithUser, res: Response) => {
   const userId = req.user!.id;
   const form = await formsService.createForm(userId, req.body);
