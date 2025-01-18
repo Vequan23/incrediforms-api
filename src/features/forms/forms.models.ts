@@ -19,6 +19,7 @@ interface UpdateFormDto {
   description?: string;
   prompt?: string;
   file?: string;
+  webhook_url?: string;
 }
 
 interface UpdateFormResponse {
@@ -27,6 +28,7 @@ interface UpdateFormResponse {
   description: string;
   prompt: string;
   file: string;
+  webhook_url: string;
 }
 
 interface CreatePromptFileDto {

@@ -39,6 +39,8 @@ model Form {
   Submission    Submission[]
   PublishedForm PublishedForm[]
   PromptFile    PromptFile[]
+  Webhook       Webhook?        
+  webhook_id    String?         @unique
 }
 
 model Field {
@@ -93,10 +95,21 @@ model StripeUser {
 model PromptFile {
   id         String   @id @default(uuid())
   form       Form     @relation(fields: [form_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  form_id    String
+  form_id    String   @unique
   created_at DateTime @default(now())
   title      String
   extracted_text String
   base64_content String?
   url String?
+}
+
+model Webhook {
+  id         String   @id @default(uuid())
+  form       Form     @relation(fields: [form_id], references: [id])
+  form_id    String   @unique
+  url        String
+  method     String? @default("POST")
+  api_key    String?
+  api_key_header String?
+  created_at DateTime @default(now())
 }

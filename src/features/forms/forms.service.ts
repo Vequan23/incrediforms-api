@@ -11,9 +11,28 @@ const createForm = async (userId: string, form: CreateFormDto) => {
 };
 
 const updateForm = async (userId: string, formId: string, form: UpdateFormDto) => {
+  const formBodyWithoutWebhookUrl = { ...form, webhook_url: undefined };
+
   const existingForm = await db.form.findUnique({
     where: { id: formId, user_id: userId },
   });
+
+  const webhook = await db.webhook.findUnique({
+    where: { form_id: formId },
+  });
+
+  if (form.webhook_url) {
+    if (webhook) {
+      await db.webhook.update({
+        where: { id: webhook.id },
+        data: { url: form.webhook_url },
+      });
+    } else {
+      await db.webhook.create({
+        data: { form_id: formId, url: form.webhook_url },
+      });
+    }
+  }
 
   if (!existingForm) {
     throw new ApiError(STATUS_CODES.BAD_REQUEST, 'Form not found');
@@ -21,7 +40,7 @@ const updateForm = async (userId: string, formId: string, form: UpdateFormDto) =
 
   return db.form.update({
     where: { id: formId, user_id: userId },
-    data: form,
+    data: { ...formBodyWithoutWebhookUrl, webhook_id: webhook?.id },
   });
 };
 
@@ -30,6 +49,7 @@ const getFormById = async (id: string) => {
     where: { id },
     include: {
       PromptFile: true,
+      Webhook: true,
     },
   });
 
@@ -40,20 +60,29 @@ const getFormById = async (id: string) => {
   return {
     ...form,
     prompt_file: form.PromptFile,
-    PromptFile: undefined
+    PromptFile: undefined,
+    webhook_id: undefined,
+    webhook: form.Webhook,
+    Webhook: undefined,
   };
 };
 
 const listForms = async (userId: string, nameParam?: string) => {
   const forms = await db.form.findMany({
     where: { user_id: userId, name: { contains: nameParam } },
-    include: { PromptFile: true },
+    include: { PromptFile: true, Webhook: true },
   });
 
   return forms.map(form => ({
     ...form,
     prompt_file: form.PromptFile,
-    PromptFile: undefined
+    PromptFile: undefined,
+    webhook_id: undefined,
+    Webhook: undefined,
+    webhook: {
+      ...form.Webhook,
+      api_key: undefined,
+    },
   }));
 };
 

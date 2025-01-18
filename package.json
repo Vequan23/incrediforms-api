@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "tsx watch src/app.ts",
+    "dev": "yarn start",
     "test": "jest",
     "prisma:migrate": "prisma migrate dev",
     "prisma:migrate:prod": "prisma migrate deploy",
