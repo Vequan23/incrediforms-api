@@ -19,6 +19,7 @@ export const errorHandler = (
   }
   console.error(err);
   return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
-    error: err.message
+    status: STATUS_CODES.INTERNAL_SERVER_ERROR,
+    error: err.message,
   });
 };

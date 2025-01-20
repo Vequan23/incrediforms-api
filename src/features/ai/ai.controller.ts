@@ -45,9 +45,9 @@ const generate = async (req: Request, res: Response) => {
   const promptTemplate = ChatPromptTemplate.fromMessages([
     ["system", SYSTEM_PROMPT],
     ["user", `
-      Here are some additional prompt instructions: {formPrompt}
+      Here are some additional prompt instructions: {form_prompt}
       Here are the form submission values: {submission}
-      Here is additional prompt text extracted from a file (if any): {documentText}
+      Here is additional prompt text extracted from a file (if any): {document_id}
       `],
   ]);
 
