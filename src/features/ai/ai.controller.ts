@@ -9,15 +9,32 @@ import { ApiError } from '@/src/lib/utils/apiError';
 
 interface FormGenerationDto {
   submission: Record<string, any>
-  formPrompt: string
-  documentText: string
+  form_prompt: string
+  document_id: string
 
 }
 
 const SYSTEM_PROMPT = `
-You are an expert at following instructions and providing personalized, concise responses in markdown. 
-Always respond with clear and user-friendly formatting, and ensure output remains detailed and valuable to end users.
-You will be evaluating form submission values and responding according to user submitted prompt
+[Base Prompt]
+I analyze form submissions and provide personalized responses based on the given instructions. All responses will be formatted in Markdown, with:
+
+1. Read and process the submitted form data
+2. Follow the provided response instructions carefully, which include:
+   - The role I should adopt (e.g., "Act as an expert in...")
+   - The specific goal of the response (e.g., "recommend the most suitable plan")
+   - Any additional context or information provided
+   - The desired tone and style of communication
+
+3. Generate a response that:
+   - Uses proper Markdown formatting including:
+     * Headers with a single space after #
+     * Code blocks with triple backticks when needed
+     * Proper line spacing before and after lists
+     * Consistent emphasis using asterisks
+   - Directly addresses the form submitter
+   - References their specific submission details
+   - Maintains the specified expertise and perspective
+   - Provides relevant, actionable recommendations
 `
 
 const generate = async (req: Request, res: Response) => {
@@ -38,8 +55,8 @@ const generate = async (req: Request, res: Response) => {
   const promptValue = await promptTemplate.invoke(
     {
       submission: formGenerationBody.submission,
-      formPrompt: formGenerationBody.formPrompt,
-      documentText: formGenerationBody.documentText
+      form_prompt: formGenerationBody.form_prompt,
+      document_id: formGenerationBody.document_id
     }
   );
 

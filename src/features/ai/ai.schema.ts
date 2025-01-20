@@ -1,7 +1,7 @@
 import Joi from 'joi';
 
 export const CREATE_GENERATION_SCHEMA = Joi.object({
-  formPrompt: Joi.string().required(),
-  documentText: Joi.object().optional(),
+  form_prompt: Joi.string().required(),
+  document_text: Joi.object().optional(),
   submission: Joi.object().required()
 });
