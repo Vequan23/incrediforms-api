@@ -6,6 +6,7 @@ const port = process.env.PORT || 3000;
 
 import authenticationRoutes from '@/features/authentication/authentication.routes';
 import formsRoutes from '@/features/forms/forms.routes';
+import aiRoutes from '@/features/ai/ai.routes'
 import { errorHandler } from '@/src/lib/utils/apiError';
 
 const LOCAL_FRONTEND_URL = 'http://localhost:3006';
@@ -20,6 +21,7 @@ app.use(cors({
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '10mb' }));
 
+app.use('/ai', aiRoutes)
 app.use('/auth', authenticationRoutes);
 app.use('/forms', formsRoutes);
 

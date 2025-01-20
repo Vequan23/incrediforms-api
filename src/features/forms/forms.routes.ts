@@ -47,7 +47,6 @@ router
     schemaValidatorMiddleware(CREATE_PROMPT_FILE_SCHEMA),
     requiresAuthMiddleware,
     formsController.createPromptFile
-
   );
 
 router
