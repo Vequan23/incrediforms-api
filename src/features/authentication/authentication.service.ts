@@ -18,51 +18,53 @@ const register = async (email: string, password: string) => {
     password: hashedPassword,
   };
 
-  const insertedUser = await usersService.createUser(newUser.email, newUser.password);
+  const userAccount = await usersService.createUser(newUser.email, newUser.password);
 
-  if (!insertedUser) {
+  if (!userAccount) {
     throw new ApiError(STATUS_CODES.INTERNAL_SERVER_ERROR, 'Failed to create user');
   }
 
-  const token = jwt.sign({ id: insertedUser.id, email: insertedUser.email }, process.env.JWT_SECRET as string);
+  const token = jwt.sign({ id: userAccount.user.id, email: userAccount.user.email }, process.env.JWT_SECRET as string);
 
-  await notificationsService.sendNewUserNotification(insertedUser);
+  await notificationsService.sendNewUserNotification(userAccount.user);
 
   return {
     token,
     user: {
-      id: insertedUser.id,
-      email: insertedUser.email,
-      tier_id: insertedUser.tier_id,
-      created_at: insertedUser.created_at,
+      id: userAccount.user.id,
+      email: userAccount.user.email,
+      tier_id: userAccount.user.tier_id,
+      created_at: userAccount.user.created_at,
     },
+    apiKey: userAccount.apiKey,
   }
 
 };
 
 const login = async (email: string, password: string) => {
-  const user = await usersService.getUserByEmail(email);
+  const userAccount = await usersService.getUserByEmail(email);
 
-  if (!user) {
+  if (!userAccount) {
     throw new ApiError(STATUS_CODES.BAD_REQUEST, 'Invalid credentials');
   }
 
-  const isPasswordValid = await bcrypt.compare(password, user.password);
+  const isPasswordValid = await bcrypt.compare(password, userAccount.user.password);
 
   if (!isPasswordValid) {
     throw new ApiError(STATUS_CODES.BAD_REQUEST, 'Invalid credentials');
   }
 
-  const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET as string);
+  const token = jwt.sign({ id: userAccount.user.id, email: userAccount.user.email }, process.env.JWT_SECRET as string);
 
   return {
     token,
     user: {
-      id: user.id,
-      email: user.email,
-      tier_id: user.tier_id,
-      created_at: user.created_at,
+      id: userAccount.user.id,
+      email: userAccount.user.email,
+      tier_id: userAccount.user.tier_id,
+      created_at: userAccount.user.created_at,
     },
+    apiKey: userAccount.apiKey,
   };
 };
 

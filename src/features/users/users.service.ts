@@ -5,7 +5,13 @@ import { STATUS_CODES } from '@/src/lib/constants/statusCodes.constants';
 const getUserByEmail = async (email: string) => {
   const user = await db.user.findUnique({ where: { email } });
 
-  return user;
+  if (!user) {
+    throw new ApiError(STATUS_CODES.BAD_REQUEST, 'User not found');
+  }
+
+  const apiKey = await db.aPIKey.findFirst({ where: { user_id: user.id } });
+
+  return { user, apiKey };
 };
 
 const getUserById = async (id: string) => {
@@ -15,11 +21,13 @@ const getUserById = async (id: string) => {
     throw new ApiError(STATUS_CODES.BAD_REQUEST, 'User not found');
   }
 
-  return user;
+  const apiKey = await db.aPIKey.findFirst({ where: { user_id: id } });
+
+  return { user, apiKey };
 };
 
 const createUser = async (email: string, password: string) => {
-  const user = await db.$transaction(async (tx) => {
+  const { user, apiKey } = await db.$transaction(async (tx) => {
     const newUser = await tx.user.create({
       data: {
         email,
@@ -28,21 +36,21 @@ const createUser = async (email: string, password: string) => {
       },
     });
 
-    await tx.aPIKey.create({
+    const newApiKey = await tx.aPIKey.create({
       data: {
         name: 'Default API Key',
         user_id: newUser.id,
       },
     });
 
-    return newUser;
+    return { user: newUser, apiKey: newApiKey };
   });
 
   if (!user) {
     throw new ApiError(STATUS_CODES.BAD_REQUEST, 'Failed to create user');
   }
 
-  return user;
+  return { user, apiKey };
 };
 
 const getApiKey = async (apiKey: string) => {
