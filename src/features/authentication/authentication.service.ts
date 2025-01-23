@@ -48,21 +48,21 @@ const login = async (email: string, password: string) => {
     throw new ApiError(STATUS_CODES.BAD_REQUEST, 'Invalid credentials');
   }
 
-  const isPasswordValid = await bcrypt.compare(password, userAccount.user.password);
+  const isPasswordValid = await bcrypt.compare(password, userAccount.user?.password || '');
 
   if (!isPasswordValid) {
     throw new ApiError(STATUS_CODES.BAD_REQUEST, 'Invalid credentials');
   }
 
-  const token = jwt.sign({ id: userAccount.user.id, email: userAccount.user.email }, process.env.JWT_SECRET as string);
+  const token = jwt.sign({ id: userAccount.user?.id, email: userAccount.user?.email }, process.env.JWT_SECRET as string);
 
   return {
     token,
     user: {
-      id: userAccount.user.id,
-      email: userAccount.user.email,
-      tier_id: userAccount.user.tier_id,
-      created_at: userAccount.user.created_at,
+      id: userAccount.user?.id,
+      email: userAccount.user?.email,
+      tier_id: userAccount.user?.tier_id,
+      created_at: userAccount.user?.created_at,
     },
     apiKey: userAccount.apiKey,
   };
