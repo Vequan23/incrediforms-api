@@ -6,4 +6,10 @@ interface RequestWithUser extends Request {
   };
 }
 
-export { RequestWithUser };
+interface RequestWithApiKey extends Request {
+  apiKey?: {
+    id: string;
+  };
+}
+
+export { RequestWithUser, RequestWithApiKey };

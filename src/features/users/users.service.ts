@@ -19,12 +19,23 @@ const getUserById = async (id: string) => {
 };
 
 const createUser = async (email: string, password: string) => {
-  const user = await db.user.create({
-    data: {
-      email,
-      password,
-      tier_id: '1',
-    },
+  const user = await db.$transaction(async (tx) => {
+    const newUser = await tx.user.create({
+      data: {
+        email,
+        password,
+        tier_id: '1',
+      },
+    });
+
+    await tx.aPIKey.create({
+      data: {
+        name: 'Default API Key',
+        user_id: newUser.id,
+      },
+    });
+
+    return newUser;
   });
 
   if (!user) {
@@ -34,4 +45,8 @@ const createUser = async (email: string, password: string) => {
   return user;
 };
 
-export default { getUserByEmail, getUserById, createUser };
+const getApiKey = async (apiKey: string) => {
+  return await db.aPIKey.findUnique({ where: { key: apiKey } });
+};
+
+export default { getUserByEmail, getUserById, createUser, getApiKey };

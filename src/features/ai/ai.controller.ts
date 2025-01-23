@@ -1,17 +1,16 @@
 
 import { STATUS_CODES } from '@/src/lib/constants/statusCodes.constants';
 import { asyncWrapper } from '@/src/lib/utils/asyncWrapper';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { ApiError } from '@/src/lib/utils/apiError';
-
+import { RequestWithApiKey } from '@/src/lib/models/models';
+import figCollectionsService from '../fig-collections/figCollections.service';
 
 interface FormGenerationDto {
   submission: Record<string, any>
-  form_prompt: string
-  document_id: string
-
+  fig_collection_id: string
 }
 
 const SYSTEM_PROMPT = `
@@ -37,17 +36,23 @@ I analyze form submissions and provide personalized responses based on the given
    - Provides relevant, actionable recommendations
 `
 
-const generate = async (req: Request, res: Response) => {
+const generate = async (req: RequestWithApiKey, res: Response) => {
   const formGenerationBody = req.body as FormGenerationDto;
+  const collectionId = formGenerationBody.fig_collection_id;
+  const collection = await figCollectionsService.getCollectionById(collectionId);
+
+  if (!collection) {
+    throw new ApiError(STATUS_CODES.BAD_REQUEST, 'Fig collection not found');
+  }
 
   const model = new ChatOpenAI({ model: "gpt-4o" });
 
   const promptTemplate = ChatPromptTemplate.fromMessages([
     ["system", SYSTEM_PROMPT],
     ["user", `
-      Here are some additional prompt instructions: {form_prompt}
+      Here are some additional prompt instructions: {collection_prompt}
       Here are the form submission values: {submission}
-      Here is additional prompt text extracted from a file (if any): {document_id}
+      Here is additional prompt text extracted from a file (if any): {extracted_document_text}
       `],
   ]);
 
@@ -55,8 +60,8 @@ const generate = async (req: Request, res: Response) => {
   const promptValue = await promptTemplate.invoke(
     {
       submission: formGenerationBody.submission,
-      form_prompt: formGenerationBody.form_prompt,
-      document_id: formGenerationBody.document_id
+      collection_prompt: collection?.prompt,
+      extracted_document_text: collection?.fig_collection_file?.extracted_text
     }
   );
 

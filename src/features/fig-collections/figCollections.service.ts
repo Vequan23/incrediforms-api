@@ -26,6 +26,15 @@ const listFigCollections = async (userId: string) => {
   });
 };
 
+const getCollectionById = async (figCollectionId: string) => {
+  return db.figCollection.findUnique({
+    where: { id: figCollectionId },
+    include: {
+      fig_collection_file: true
+    }
+  });
+};
+
 const deleteFigCollection = async (userId: string, figCollectionId: string) => {
   return db.figCollection.delete({
     where: { id: figCollectionId, user_id: userId },
@@ -78,5 +87,6 @@ export default {
   deleteFigCollection,
   updateFigCollection,
   createFigCollectionFile,
-  deleteFigCollectionFile
+  deleteFigCollectionFile,
+  getCollectionById
 };  
