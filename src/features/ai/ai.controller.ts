@@ -37,6 +37,7 @@ I analyze form submissions and provide personalized responses based on the given
 `
 
 const generate = async (req: RequestWithApiKey, res: Response) => {
+  const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY
   const formGenerationBody = req.body as FormGenerationDto;
   const collectionId = formGenerationBody.fig_collection_id;
   const collection = await figCollectionsService.getCollectionById(collectionId);
@@ -45,7 +46,7 @@ const generate = async (req: RequestWithApiKey, res: Response) => {
     throw new ApiError(STATUS_CODES.BAD_REQUEST, 'Fig collection not found');
   }
 
-  const model = new ChatOpenAI({ model: "gpt-4o" });
+  const model = new ChatOpenAI({ model: "deepseek-chat", configuration: { apiKey: DEEPSEEK_API_KEY, baseURL: 'https://api.deepseek.com/v1' } });
 
   const promptTemplate = ChatPromptTemplate.fromMessages([
     ["system", SYSTEM_PROMPT],
@@ -69,7 +70,9 @@ const generate = async (req: RequestWithApiKey, res: Response) => {
     const response = await model.invoke(promptValue)
 
     res.status(STATUS_CODES.OK).json({
-      generative_response: response.content
+      model: response.response_metadata.model_name,
+      generative_response: response.content,
+      usage_metadata: response.usage_metadata
     });
 
   } catch (error) {
