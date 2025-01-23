@@ -3,21 +3,26 @@ import { ApiError } from '@/src/lib/utils/apiError';
 import { STATUS_CODES } from '@/src/lib/constants/statusCodes.constants';
 
 const getUserByEmail = async (email: string) => {
-  const user = await db.user.findUnique({ where: { email } });
-
-  const apiKey = await db.aPIKey.findFirst({ where: { user_id: user?.id } });
+  const { user, apiKey } = await db.$transaction(async (tx) => {
+    const user = await tx.user.findUnique({ where: { email } });
+    const apiKey = await tx.aPIKey.findFirst({ where: { user_id: user?.id } });
+    return { user, apiKey };
+  });
 
   return { user, apiKey };
 };
 
 const getUserById = async (id: string) => {
-  const user = await db.user.findUnique({ where: { id } });
+  const { user, apiKey } = await db.$transaction(async (tx) => {
+    const user = await tx.user.findUnique({ where: { id } });
 
-  if (!user) {
-    throw new ApiError(STATUS_CODES.BAD_REQUEST, 'User not found');
-  }
+    if (!user) {
+      throw new ApiError(STATUS_CODES.BAD_REQUEST, 'User not found');
+    }
 
-  const apiKey = await db.aPIKey.findFirst({ where: { user_id: id } });
+    const apiKey = await tx.aPIKey.findFirst({ where: { user_id: id } });
+    return { user, apiKey };
+  });
 
   return { user, apiKey };
 };

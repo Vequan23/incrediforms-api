@@ -6,7 +6,7 @@ import { STATUS_CODES } from '@/src/lib/constants/statusCodes.constants';
 import { notificationsService } from "../notifications/notifications.service";
 
 const register = async (email: string, password: string) => {
-  const user = await usersService.getUserByEmail(email);
+  const { user } = await usersService.getUserByEmail(email);
 
   if (user) {
     throw new ApiError(STATUS_CODES.BAD_REQUEST, 'User already exists');

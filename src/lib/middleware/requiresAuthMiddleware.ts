@@ -47,9 +47,9 @@ export const requiresAuthMiddleware = async (
 
 
     // Check existing user
-    const user = await usersService.getUserById(decoded.id);
+    const userAccount = await usersService.getUserById(decoded.id);
 
-    if (!user) {
+    if (!userAccount.user) {
       res.status(STATUS_CODES.UNAUTHORIZED).json({ message: 'User not found' });
       return;
     }
