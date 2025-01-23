@@ -8,6 +8,7 @@ import authenticationRoutes from '@/features/authentication/authentication.route
 import formsRoutes from '@/features/forms/forms.routes';
 import aiRoutes from '@/features/ai/ai.routes'
 import { errorHandler } from '@/src/lib/utils/apiError';
+import figCollectionsRoutes from './features/fig-collections/figCollections.routes';
 
 const LOCAL_FRONTEND_URL = 'http://localhost:3006';
 const PROD_FRONTEND_URL = 'https://www.incrediforms.com';
@@ -24,6 +25,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use('/ai', aiRoutes)
 app.use('/auth', authenticationRoutes);
 app.use('/forms', formsRoutes);
+app.use('/fig-collections', figCollectionsRoutes);
 
 app.use(errorHandler);
 
