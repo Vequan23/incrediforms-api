@@ -1,4 +1,3 @@
-
 import { STATUS_CODES } from '@/src/lib/constants/statusCodes.constants';
 import { asyncWrapper } from '@/src/lib/utils/asyncWrapper';
 import { Response } from 'express';
@@ -11,6 +10,7 @@ import figCollectionsService from '../fig-collections/figCollections.service';
 interface FormGenerationDto {
   submission: Record<string, any>
   fig_collection_id: string
+  stream?: boolean
 }
 
 const SYSTEM_PROMPT = `
@@ -39,6 +39,7 @@ I analyze form submissions and provide personalized responses based on the given
 const generate = async (req: RequestWithApiKey, res: Response) => {
   const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY
   const formGenerationBody = req.body as FormGenerationDto;
+  const stream = formGenerationBody.stream;
   const collectionId = formGenerationBody.fig_collection_id;
   const collection = await figCollectionsService.getCollectionById(collectionId);
 
@@ -46,7 +47,28 @@ const generate = async (req: RequestWithApiKey, res: Response) => {
     throw new ApiError(STATUS_CODES.BAD_REQUEST, 'Fig collection not found');
   }
 
-  const model = new ChatOpenAI({ model: "deepseek-chat", configuration: { apiKey: DEEPSEEK_API_KEY, baseURL: 'https://api.deepseek.com/v1' } });
+  if (stream) {
+    // Set proper headers for streaming
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+  }
+
+  const model = new ChatOpenAI({
+    streaming: stream,
+    model: "deepseek-chat",
+    configuration: {
+      apiKey: DEEPSEEK_API_KEY,
+      baseURL: 'https://api.deepseek.com/v1',
+    },
+    callbacks: [{
+      handleLLMNewToken(token: string) {
+        if (stream) {
+          res.write(`data: ${JSON.stringify({ token })}\n\n`);
+        }
+      },
+    }],
+  });
 
   const promptTemplate = ChatPromptTemplate.fromMessages([
     ["system", SYSTEM_PROMPT],
@@ -57,26 +79,32 @@ const generate = async (req: RequestWithApiKey, res: Response) => {
       `],
   ]);
 
-
-  const promptValue = await promptTemplate.invoke(
-    {
-      submission: formGenerationBody.submission,
-      collection_prompt: collection?.prompt,
-      extracted_document_text: collection?.fig_collection_file?.extracted_text
-    }
-  );
+  const promptValue = await promptTemplate.invoke({
+    submission: formGenerationBody.submission,
+    collection_prompt: collection?.prompt,
+    extracted_document_text: collection?.fig_collection_file?.extracted_text
+  });
 
   try {
-    const response = await model.invoke(promptValue)
+    if (stream) {
+      await model.invoke(promptValue);
+      res.write('data: [DONE]\n\n');
+      res.end();
+    } else {
+      const response = await model.invoke(promptValue);
 
-    res.status(STATUS_CODES.OK).json({
-      model: response.response_metadata.model_name,
-      generative_response: response.content,
-      usage_metadata: response.usage_metadata
-    });
-
+      res.status(STATUS_CODES.OK).json({
+        model: response.response_metadata.model_name,
+        generative_response: response.content,
+        usage_metadata: response.usage_metadata
+      });
+    }
   } catch (error) {
-    throw new ApiError(STATUS_CODES.INTERNAL_SERVER_ERROR, error.message)
+    if (stream) {
+      res.write(`data: ${JSON.stringify({ error: error.message })}\n\n`);
+      res.end();
+    }
+    throw new ApiError(STATUS_CODES.INTERNAL_SERVER_ERROR, error.message);
   }
 }
 
