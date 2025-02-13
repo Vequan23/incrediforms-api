@@ -17,7 +17,7 @@ export const CREATE_FIELD_SCHEMA = Joi.object({
   name: Joi.string().required(),
   label: Joi.string().required(),
   type: Joi.string().valid(...INPUT_TYPES).required(),
-  description: Joi.string(),
+  description: Joi.string().optional().allow(null),
   required: Joi.boolean(),
   order: Joi.number(),
 });
@@ -25,7 +25,7 @@ export const CREATE_FIELD_SCHEMA = Joi.object({
 export const UPDATE_FIELD_SCHEMA = Joi.object({
   name: Joi.string(),
   label: Joi.string(),
-  description: Joi.string(),
+  description: Joi.string().optional().allow(null),
   required: Joi.boolean(),
   order: Joi.number(),
   type: Joi.string().valid(...INPUT_TYPES),
