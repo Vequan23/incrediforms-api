@@ -107,7 +107,7 @@ model PromptFile {
 
 model Webhook {
   id         String   @id @default(uuid())
-  form       Form     @relation(fields: [form_id], references: [id])
+  form       Form     @relation(fields: [form_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   form_id    String   @unique
   url        String
   method     String? @default("POST")
