@@ -4,8 +4,8 @@ import { STATUS_CODES } from '@/src/lib/constants/statusCodes.constants';
 
 const getUserByEmail = async (email: string) => {
   const { user, apiKey } = await db.$transaction(async (tx) => {
-    const user = await tx.user.findUnique({ where: { email } });
-    const apiKey = await tx.aPIKey.findFirst({ where: { user_id: user?.id } });
+    const user = await tx.user.findUnique({ where: { email }, include: { stripe_user: true } });
+    const apiKey = await tx.aPIKey.findFirst({ where: { user_id: user?.id, } });
     return { user, apiKey };
   });
 

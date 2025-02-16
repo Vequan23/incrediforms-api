@@ -65,6 +65,8 @@ jobs:
             JWT_SECRET=jwt-secret:latest
             SLACK_WEBHOOK_URL=slack-webhook-secret:latest
             DEEPSEEK_API_KEY=deepseek-api-key-secret:latest
+            STRIPE_SECRET_KEY=stripe-secret-key-secret:latest
+            STRIPE_WEBHOOK_SECRET=stripe-webhook-secret:latest
 
       - name: 'Show output...'
         run: echo ${{ steps.deploy.outputs.url }}

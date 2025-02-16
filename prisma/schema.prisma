@@ -22,7 +22,7 @@ model User {
   created_at    DateTime        @default(now())
   Form          Form[]
   PublishedForm PublishedForm[]
-  StripeUser    StripeUser[]
+  stripe_user    StripeUser?
   APIKey        APIKey[]
   FigCollection FigCollection[]
 }
@@ -89,9 +89,10 @@ model PublishedForm {
 model StripeUser {
   id         String   @id @default(uuid())
   user       User     @relation(fields: [user_id], references: [id])
-  user_id    String
+  user_id    String   @unique
   stripe_id  String
   created_at DateTime @default(now())
+  is_active  Boolean  @default(true)
 }
 
 model PromptFile {

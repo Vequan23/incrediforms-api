@@ -63,6 +63,7 @@ const login = async (email: string, password: string) => {
       email: userAccount.user?.email,
       tier_id: userAccount.user?.tier_id,
       created_at: userAccount.user?.created_at,
+      is_premium: userAccount.user?.stripe_user?.is_active
     },
     apiKey: userAccount.apiKey,
   };

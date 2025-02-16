@@ -8,6 +8,7 @@ import { Request, Response, NextFunction } from 'express';
 import authenticationRoutes from '@/features/authentication/authentication.routes';
 import formsRoutes from '@/features/forms/forms.routes';
 import aiRoutes from '@/features/ai/ai.routes'
+import paymentsRoutes from '@/features/payments/payments.routes';
 import { errorHandler } from '@/src/lib/utils/apiError';
 import figCollectionsRoutes from './features/fig-collections/figCollections.routes';
 
@@ -35,6 +36,22 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+// Add the webhook route first, before any body parsing middleware
+app.use('/webhooks', (req: Request, res: Response, next: NextFunction) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  // Handle OPTIONS preflight request
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  next();
+  return;
+}, paymentsRoutes);
+
+// Add the body parsing middleware after the webhook route
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '10mb' }));
 
