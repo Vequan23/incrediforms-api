@@ -71,7 +71,7 @@ const login = async (email: string, password: string) => {
 };
 
 const getUserByApiKey = async (apiKey: string) => {
-  const foundApiKey = await db.aPIKey.findUnique({ where: { key: apiKey }, include: { user: true } });
+  const foundApiKey = await db.aPIKey.findUnique({ where: { key: apiKey }, include: { user: { select: { id: true, email: true, created_at: true } } } });
 
   if (!foundApiKey) {
     throw new ApiError(STATUS_CODES.BAD_REQUEST, 'Invalid API key');
