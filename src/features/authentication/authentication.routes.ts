@@ -9,5 +9,6 @@ const router = express.Router();
 
 router.post('/register', schemaValidatorMiddleware(CREDENTIALS_SCHEMA), authenticationController.register);
 router.post('/login', schemaValidatorMiddleware(CREDENTIALS_SCHEMA), authenticationController.login);
+router.get('/me', authenticationController.getUserByApiKey);
 
 export default router;

@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { ApiError } from '@/src/lib/utils/apiError';
 import { STATUS_CODES } from '@/src/lib/constants/statusCodes.constants';
 import { notificationsService } from "../notifications/notifications.service";
+import db from "@/src/lib/services/db";
 
 const register = async (email: string, password: string) => {
   const { user } = await usersService.getUserByEmail(email);
@@ -69,4 +70,14 @@ const login = async (email: string, password: string) => {
   };
 };
 
-export default { register, login };
+const getUserByApiKey = async (apiKey: string) => {
+  const foundApiKey = await db.aPIKey.findUnique({ where: { key: apiKey }, include: { user: true } });
+
+  if (!foundApiKey) {
+    throw new ApiError(STATUS_CODES.BAD_REQUEST, 'Invalid API key');
+  }
+
+  return foundApiKey;
+};
+
+export default { register, login, getUserByApiKey };

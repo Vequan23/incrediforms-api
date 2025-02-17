@@ -18,4 +18,11 @@ const login = async (req: Request, res: Response) => {
   res.status(STATUS_CODES.OK).json(response);
 };
 
-export default { register: asyncWrapper(register), login: asyncWrapper(login) };
+const getUserByApiKey = async (req: Request, res: Response) => {
+  const apiKey = req.headers['x-incredi-api-key'] as string;
+  const response = await authenticationService.getUserByApiKey(apiKey);
+
+  res.status(STATUS_CODES.OK).json(response);
+};
+
+export default { register: asyncWrapper(register), login: asyncWrapper(login), getUserByApiKey: asyncWrapper(getUserByApiKey) };
