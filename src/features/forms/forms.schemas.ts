@@ -9,8 +9,8 @@ const CREATE_FORM_SCHEMA = Joi.object({
 
 const UPDATE_FORM_SCHEMA = Joi.object({
   name: Joi.string().optional(),
-  description: Joi.string().optional(),
-  prompt: Joi.string().optional(),
+  description: Joi.string().optional().allow(''),
+  prompt: Joi.string().optional().allow(''),
   file: Joi.string().allow(null).optional(),
   theme_color: Joi.string().optional(),
   webhook_url: Joi.string().optional(),

@@ -14,7 +14,14 @@ const getUserByEmail = async (email: string) => {
 
 const getUserById = async (id: string) => {
   const { user, apiKey } = await db.$transaction(async (tx) => {
-    const user = await tx.user.findUnique({ where: { id } });
+    const user = await tx.user.findUnique({
+      where: { id }, select: {
+        id: true,
+        email: true,
+        created_at: true,
+        stripe_user: true,
+      }
+    });
 
     if (!user) {
       throw new ApiError(STATUS_CODES.BAD_REQUEST, 'User not found');
