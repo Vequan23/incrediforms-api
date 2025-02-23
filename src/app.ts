@@ -4,6 +4,7 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
 import { Request, Response, NextFunction } from 'express';
+const cookieParser = require('cookie-parser');
 
 import authenticationRoutes from '@/features/authentication/authentication.routes';
 import formsRoutes from '@/features/forms/forms.routes';
@@ -54,6 +55,7 @@ app.use('/webhooks', (req: Request, res: Response, next: NextFunction) => {
 // Add the body parsing middleware after the webhook route
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '10mb' }));
+app.use(cookieParser());
 
 // Regular routes with CORS
 app.use('/auth', authenticationRoutes);

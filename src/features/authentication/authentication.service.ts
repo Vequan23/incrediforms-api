@@ -80,4 +80,10 @@ const getUserByApiKey = async (apiKey: string) => {
   return foundApiKey;
 };
 
-export default { register, login, getUserByApiKey };
+const continueWithGoogleAuth = async () => {
+  return {
+    url: process.env.GOOGLE_AUTH_URL,
+  }
+}
+
+export default { register, login, getUserByApiKey, continueWithGoogleAuth };

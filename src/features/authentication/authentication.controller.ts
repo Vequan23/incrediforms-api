@@ -40,4 +40,9 @@ const getUserById = async (req: RequestWithUser, res: Response) => {
   res.status(STATUS_CODES.OK).json(user);
 };
 
-export default { register: asyncWrapper(register), login: asyncWrapper(login), getUserByApiKey: asyncWrapper(getUserByApiKey), getUserById: asyncWrapper(getUserById) };
+const continueWithGoogleAuth = async (req: Request, res: Response) => {
+  const response = await authenticationService.continueWithGoogleAuth();
+  res.status(STATUS_CODES.OK).json(response);
+};
+
+export default { register: asyncWrapper(register), login: asyncWrapper(login), getUserByApiKey: asyncWrapper(getUserByApiKey), getUserById: asyncWrapper(getUserById), continueWithGoogleAuth: asyncWrapper(continueWithGoogleAuth) };
