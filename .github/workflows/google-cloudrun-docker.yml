@@ -67,6 +67,7 @@ jobs:
             DEEPSEEK_API_KEY=deepseek-api-key-secret:latest
             STRIPE_SECRET_KEY=stripe-secret-key-secret:latest
             STRIPE_WEBHOOK_SECRET=stripe-webhook-secret:latest
+            GOOGLE_CLIENT_ID=google-client-id-secret:latest
 
       - name: 'Show output...'
         run: echo ${{ steps.deploy.outputs.url }}
