@@ -20,6 +20,7 @@ const getUserById = async (id: string) => {
         email: true,
         created_at: true,
         stripe_user: true,
+        demo_account: true,
       }
     });
 

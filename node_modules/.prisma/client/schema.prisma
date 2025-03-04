@@ -19,6 +19,7 @@ model User {
   password      String
   tier_id       String
   logo_url      String?
+  demo_account  Boolean         @default(false)
   created_at    DateTime        @default(now())
   Form          Form[]
   PublishedForm PublishedForm[]

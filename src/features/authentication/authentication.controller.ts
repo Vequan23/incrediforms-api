@@ -34,7 +34,7 @@ const getUserById = async (req: RequestWithUser, res: Response) => {
     id: response.user.id,
     email: response.user.email,
     created_at: response.user.created_at,
-    is_premium: response.user.stripe_user?.is_active
+    is_premium: response.user.stripe_user?.is_active || response.user.demo_account
   }
 
   res.status(STATUS_CODES.OK).json(user);
