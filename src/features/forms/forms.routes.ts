@@ -95,6 +95,7 @@ router
 router
   .route('/:id/scheduled-reports')
   .get(requiresAuthMiddleware, scheduledReportsController.getReportByFormId)
+  .delete(requiresAuthMiddleware, scheduledReportsController.deleteScheduledReport)
   .post(
     schemaValidatorMiddleware(CREATE_SCHEDULED_REPORT_SCHEMA),
     requiresAuthMiddleware,

@@ -134,6 +134,11 @@ const addScheduledReportToCron = async (scheduledReport: ScheduledReport) => {
   });
 }
 
+const removeScheduledReportFromCron = async (scheduledReport: ScheduledReport) => {
+  const cronExpression = scheduledReport.cron_expression;
+  cron.unschedule(cronExpression);
+}
+
 const sendReportPromptToLLM = async (prompt: string, submissions: Submission[]) => {
   const openai = new ChatOpenAI({
     model: "gpt-4o-mini",
@@ -159,10 +164,20 @@ const sendReportPromptToLLM = async (prompt: string, submissions: Submission[]) 
   return response;
 }
 
+const deleteScheduledReport = async (form_id: string, user_id: string) => {
+  const deletedScheduledReport = await prisma.scheduledReport.delete({
+    where: { form_id: form_id, user_id: user_id },
+  });
+
+  removeScheduledReportFromCron(deletedScheduledReport);
+
+  return deletedScheduledReport;
+}
 
 export const scheduledReportsService = {
   createScheduledReport,
   getReportByFormId,
   getAllScheduledReports,
   addAllScheduledReportsToCron,
+  deleteScheduledReport,
 };
