@@ -13,6 +13,7 @@ const DATE_RANGE_TO_GTE = {
 const listSubmissions = async (formId: string, dateRange?: DateRange) => {
   const submissions = await db.submission.findMany({
     where: { form_id: formId, created_at: { gte: dateRange ? DATE_RANGE_TO_GTE[dateRange] : undefined } },
+    orderBy: { created_at: 'desc' },
   });
 
   return submissions;
