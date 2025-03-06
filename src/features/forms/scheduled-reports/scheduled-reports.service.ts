@@ -95,8 +95,12 @@ const sendScheduledReport = async (scheduledReport: ScheduledReport) => {
 
     const response = await sendReportPromptToLLM(prompt, submissionsToSend);
 
+    const fromEmail = process.env.NODE_ENV === 'production'
+      ? 'reports@incrediforms.com'
+      : 'reports@resend.dev';
+
     await resend.emails.send({
-      from: 'reports@incrediforms.com',
+      from: fromEmail,
       to: [scheduledReport.email_address],
       subject: `IncrediForms Report - ${scheduledReport.name}`,
       html: response.content as string
