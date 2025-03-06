@@ -45,13 +45,13 @@ export enum DateRange {
 const getCronExpression = (frequency: Frequency) => {
   switch (frequency) {
     case Frequency.DAILY:
-      return '0 0 * * *';
+      return '0 8 * * *'; // 8am every day
     case Frequency.WEEKLY:
-      return '0 8 * * 1';
+      return '0 8 * * 1'; // 8am every Monday
     case Frequency.MONTHLY:
-      return '0 8 1 * *';
+      return '0 8 1 * *'; // 8am on the first day of every month
     case Frequency.EVERY_2_MINUTES:
-      return '*/2 * * * *';
+      return '*/2 * * * *'; // every 2 minutes
   }
 }
 
