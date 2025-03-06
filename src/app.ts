@@ -12,6 +12,7 @@ import aiRoutes from '@/features/ai/ai.routes'
 import paymentsRoutes from '@/features/payments/payments.routes';
 import { errorHandler } from '@/src/lib/utils/apiError';
 import figCollectionsRoutes from './features/fig-collections/figCollections.routes';
+import { scheduledReportsService } from './features/forms/scheduled-reports/scheduled-reports.service';
 
 const PROD_FRONTEND_URL = 'https://www.incrediforms.com';
 
@@ -77,7 +78,13 @@ app.use('/ai', (req: Request, res: Response, next: NextFunction) => {
   return;
 }, aiRoutes);
 
+scheduledReportsService.addAllScheduledReportsToCron()
+  .catch((error: any) => {
+    console.error('Failed to initialize scheduled reports:', error);
+  });
+
 app.use(errorHandler);
+
 
 app.listen(port, () => {
   console.log(`IncrediForms API listening on port ${port}`);

@@ -8,11 +8,11 @@ import { requiresAuthMiddleware } from '@/src/lib/middleware/requiresAuthMiddlew
 import formsController from './forms.controller';
 import fieldsController from './fields/fields.controller';
 import submissionsController from './submissions/submissions.controller';
-
+import scheduledReportsController from './scheduled-reports/scheduled-reports.controller';
 // Schema imports
 import { CREATE_FORM_SCHEMA, CREATE_PROMPT_FILE_SCHEMA, UPDATE_FORM_SCHEMA } from './forms.schemas';
 import { CREATE_FIELD_SCHEMA, UPDATE_FIELD_SCHEMA, REORDER_FIELDS_SCHEMA } from './fields/fields.schemas';
-
+import { CREATE_SCHEDULED_REPORT_SCHEMA } from './scheduled-reports/scheduled-reports.schema';
 const router = express.Router();
 
 // Form routes
@@ -89,5 +89,16 @@ router
   .route('/:id/submissions')
   .get(requiresAuthMiddleware, submissionsController.listSubmissions)
   .post(submissionsController.createSubmission);
+
+
+// Scheduled Report routes
+router
+  .route('/:id/scheduled-reports')
+  .get(requiresAuthMiddleware, scheduledReportsController.getReportByFormId)
+  .post(
+    schemaValidatorMiddleware(CREATE_SCHEDULED_REPORT_SCHEMA),
+    requiresAuthMiddleware,
+    scheduledReportsController.createScheduledReport
+  );
 
 export default router;

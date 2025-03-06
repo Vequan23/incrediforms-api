@@ -2,10 +2,17 @@ import db from '@/services/db';
 import { ApiError } from '@/src/lib/utils/apiError';
 import { STATUS_CODES } from '@/src/lib/constants/statusCodes.constants';
 import { callWebhook } from '../webhook-integrator/webhooks.service';
+import { DateRange } from '../scheduled-reports/scheduled-reports.service';
 
-const listSubmissions = async (formId: string) => {
+const DATE_RANGE_TO_GTE = {
+  [DateRange.LAST_24_HOURS]: new Date(Date.now() - 24 * 60 * 60 * 1000),
+  [DateRange.LAST_7_DAYS]: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+  [DateRange.LAST_30_DAYS]: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+};
+
+const listSubmissions = async (formId: string, dateRange?: DateRange) => {
   const submissions = await db.submission.findMany({
-    where: { form_id: formId },
+    where: { form_id: formId, created_at: { gte: dateRange ? DATE_RANGE_TO_GTE[dateRange] : undefined } },
   });
 
   return submissions;

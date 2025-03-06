@@ -26,6 +26,7 @@ model User {
   stripe_user    StripeUser?
   APIKey        APIKey[]
   FigCollection FigCollection[]
+  scheduled_report ScheduledReport[]
 }
 
 model Form {
@@ -44,6 +45,7 @@ model Form {
   PromptFile    PromptFile[]
   Webhook       Webhook?        
   webhook_id    String?         @unique
+  scheduled_report ScheduledReport?
 }
 
 model Field {
@@ -149,4 +151,21 @@ model APIKey {
   expires_at  DateTime?
   is_active   Boolean   @default(true)
 }
+  
+  model ScheduledReport {
+    id         String   @id @default(uuid())
+    created_at DateTime @default(now())
+    user       User     @relation(fields: [user_id], references: [id])
+    user_id    String
+    form       Form     @relation(fields: [form_id], references: [id])
+    form_id    String   @unique
+    prompt     String
+    cron_expression   String
+    email_address   String
+    name   String
+    frequency   String
+    date_range   String
+    last_sent  DateTime?
+    next_sent  DateTime?
+  }
   
