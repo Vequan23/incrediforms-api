@@ -20,8 +20,14 @@ const deleteScheduledReport = async (req: RequestWithUser, res: Response) => {
   res.status(200).json({ message: 'Scheduled report deleted' });
 };
 
+const resetAllCronJobs = async (req: RequestWithUser, res: Response) => {
+  const result = await scheduledReportsService.resetAllCronJobs();
+  res.status(200).json(result);
+};
+
 export default {
   createScheduledReport: asyncWrapper(createScheduledReport),
   getReportByFormId: asyncWrapper(getReportByFormId),
   deleteScheduledReport: asyncWrapper(deleteScheduledReport),
+  resetAllCronJobs: asyncWrapper(resetAllCronJobs),
 };

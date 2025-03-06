@@ -102,4 +102,8 @@ router
     scheduledReportsController.createScheduledReport
   );
 
+router
+  .route('/scheduled-reports/reset')
+  .post(scheduledReportsController.resetAllCronJobs);
+
 export default router;

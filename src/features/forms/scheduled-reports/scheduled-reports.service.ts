@@ -181,10 +181,33 @@ const deleteScheduledReport = async (form_id: string,) => {
   return deletedScheduledReport;
 }
 
+const resetAllCronJobs = async () => {
+  console.log('Stopping all cron jobs...');
+  const allRunningJobs = cron.getTasks();
+  console.log(`Found ${allRunningJobs.size} running jobs`);
+
+  allRunningJobs.forEach((task: any) => {
+    task.stop();
+  });
+
+  scheduledTasks.clear();
+  console.log('All cron jobs stopped');
+
+  console.log('Reinitializing cron jobs from database...');
+  await addAllScheduledReportsToCron();
+  console.log(`Reinitialized with ${scheduledTasks.size} jobs`);
+
+  return {
+    stoppedJobs: allRunningJobs.size,
+    newJobs: scheduledTasks.size
+  };
+}
+
 export const scheduledReportsService = {
   createScheduledReport,
   getReportByFormId,
   getAllScheduledReports,
   addAllScheduledReportsToCron,
   deleteScheduledReport,
+  resetAllCronJobs,
 };
