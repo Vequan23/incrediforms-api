@@ -15,8 +15,8 @@ const getReportByFormId = async (req: RequestWithUser, res: Response) => {
 };
 
 const deleteScheduledReport = async (req: RequestWithUser, res: Response) => {
-  const { scheduled_report_id } = req.params;
-  await scheduledReportsService.deleteScheduledReport(scheduled_report_id, req.user?.id!);
+  const { id: form_id } = req.params;
+  await scheduledReportsService.deleteScheduledReport(form_id);
   res.status(200).json({ message: 'Scheduled report deleted' });
 };
 

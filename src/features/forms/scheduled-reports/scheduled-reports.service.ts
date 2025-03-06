@@ -8,6 +8,7 @@ import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { SCHEDULED_REPORT_SYSTEM_PROMPT } from './scheduled-reports.prompts';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+const scheduledTasks = new Map<string, any>();
 
 interface CreateScheduledReportRequest {
   form_id: string;
@@ -121,22 +122,28 @@ const addAllScheduledReportsToCron = async () => {
 
   scheduledReports.forEach((scheduledReport) => {
     const cronExpression = scheduledReport.cron_expression;
-    cron.schedule(cronExpression, async () => {
+    const task = cron.schedule(cronExpression, async () => {
       await sendScheduledReport(scheduledReport);
     });
+    scheduledTasks.set(scheduledReport.form_id, task);
   });
 };
 
 const addScheduledReportToCron = async (scheduledReport: ScheduledReport) => {
   const cronExpression = scheduledReport.cron_expression;
-  cron.schedule(cronExpression, async () => {
+  const task = cron.schedule(cronExpression, async () => {
     await sendScheduledReport(scheduledReport);
   });
+  scheduledTasks.set(scheduledReport.form_id, task);
 }
 
+
 const removeScheduledReportFromCron = async (scheduledReport: ScheduledReport) => {
-  const cronExpression = scheduledReport.cron_expression;
-  cron.unschedule(cronExpression);
+  const task = scheduledTasks.get(scheduledReport.form_id);
+  if (task) {
+    task.stop();
+    scheduledTasks.delete(scheduledReport.form_id);
+  }
 }
 
 const sendReportPromptToLLM = async (prompt: string, submissions: Submission[]) => {
@@ -164,9 +171,9 @@ const sendReportPromptToLLM = async (prompt: string, submissions: Submission[]) 
   return response;
 }
 
-const deleteScheduledReport = async (form_id: string, user_id: string) => {
+const deleteScheduledReport = async (form_id: string,) => {
   const deletedScheduledReport = await prisma.scheduledReport.delete({
-    where: { form_id: form_id, user_id: user_id },
+    where: { form_id },
   });
 
   removeScheduledReportFromCron(deletedScheduledReport);
