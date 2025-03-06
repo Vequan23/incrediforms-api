@@ -78,6 +78,7 @@ app.use('/ai', (req: Request, res: Response, next: NextFunction) => {
   return;
 }, aiRoutes);
 
+
 scheduledReportsService.addAllScheduledReportsToCron()
   .catch((error: any) => {
     console.error('Failed to initialize scheduled reports:', error);

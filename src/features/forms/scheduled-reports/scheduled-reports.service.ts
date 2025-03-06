@@ -65,6 +65,8 @@ const createScheduledReport = async (scheduledReport: CreateScheduledReportReque
   const createdScheduledReport = await prisma.scheduledReport.create({
     data: dataToInsert,
   });
+
+  addScheduledReportToCron(createdScheduledReport);
   return createdScheduledReport;
 };
 
@@ -125,6 +127,13 @@ const addAllScheduledReportsToCron = async () => {
   });
 };
 
+const addScheduledReportToCron = async (scheduledReport: ScheduledReport) => {
+  const cronExpression = scheduledReport.cron_expression;
+  cron.schedule(cronExpression, async () => {
+    await sendScheduledReport(scheduledReport);
+  });
+}
+
 const sendReportPromptToLLM = async (prompt: string, submissions: Submission[]) => {
   const openai = new ChatOpenAI({
     model: "gpt-4o-mini",
@@ -156,5 +165,4 @@ export const scheduledReportsService = {
   getReportByFormId,
   getAllScheduledReports,
   addAllScheduledReportsToCron,
-  sendReportPromptToLLM
 };
