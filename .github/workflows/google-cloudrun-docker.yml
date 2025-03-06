@@ -68,6 +68,8 @@ jobs:
             STRIPE_SECRET_KEY=stripe-secret-key-secret:latest
             STRIPE_WEBHOOK_SECRET=stripe-webhook-secret:latest
             GOOGLE_CLIENT_ID=google-client-id-secret:latest
+            OPENAI_API_KEY=openai-api-key-secret:latest
+            RESEND_API_KEY=resend-api-key-secret:latest
 
       - name: 'Show output...'
         run: echo ${{ steps.deploy.outputs.url }}
