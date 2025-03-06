@@ -9,7 +9,7 @@ const createScheduledReport = async (req: RequestWithUser, res: Response) => {
 };
 
 const getReportByFormId = async (req: RequestWithUser, res: Response) => {
-  const { form_id } = req.params;
+  const { id: form_id } = req.params;
   const scheduledReport = await scheduledReportsService.getReportByFormId(form_id, req.user?.id!);
   res.status(200).json(scheduledReport);
 };
