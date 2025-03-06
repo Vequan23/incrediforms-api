@@ -59,7 +59,7 @@ const getCronExpression = (frequency: Frequency) => {
 const createScheduledReport = async (scheduledReport: CreateScheduledReportRequest, user_id: string) => {
   const dataToInsert: ScheduledReport = {
     ...scheduledReport,
-    cron_expression: getCronExpression(Frequency.EVERY_2_MINUTES),
+    cron_expression: getCronExpression(scheduledReport.frequency),
     user_id: user_id,
   }
 
