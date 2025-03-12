@@ -3,8 +3,8 @@ import { CreateFormDto, CreatePromptFileDto, UpdateFormDto } from './forms.model
 import { STATUS_CODES } from '@/src/lib/constants/statusCodes.constants';
 import { ApiError } from '@/src/lib/utils/apiError';
 import { extractTextFromBase64Pdf } from './extractTextFromBase64Pdf';
-import { Field } from '@prisma/client';
 import { CreateFieldDto } from './fields/fields.models';
+import { options } from 'joi';
 
 const createForm = async (userId: string, form: CreateFormDto) => {
   return db.form.create({
@@ -173,6 +173,17 @@ const generateFromPrompt = async (userId: string, formId: string, form: any) => 
       label: field.label,
     })) as CreateFieldDto[];
 
+    const bulkAddFieldsForOptions = form.object.fields.map((field: CreateFieldDto) => ({
+      form_id: formId,
+      name: field.name,
+      type: field.type,
+      required: field.required,
+      order: field.order,
+      options: field.options,
+      label: field.label,
+    })) as CreateFieldDto[];
+
+
     await tx.field.deleteMany({
       where: { form_id: formId },
     });
@@ -182,7 +193,7 @@ const generateFromPrompt = async (userId: string, formId: string, form: any) => 
     });
 
     await tx.fieldOption.createMany({
-      data: bulkAddFields
+      data: bulkAddFieldsForOptions
         .filter(field => field.options && field.options.length > 0)
         .map((field,) => ({
           field_id: (createdFields as any).id,
