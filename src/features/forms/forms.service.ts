@@ -171,35 +171,40 @@ const generateFromPrompt = async (userId: string, formId: string, form: any) => 
       required: field.required,
       order: field.order,
       label: field.label,
-    })) as CreateFieldDto[];
-
-    const bulkAddFieldsForOptions = form.object.fields.map((field: CreateFieldDto) => ({
-      form_id: formId,
-      name: field.name,
-      type: field.type,
-      required: field.required,
-      order: field.order,
-      options: field.options,
-      label: field.label,
-    })) as CreateFieldDto[];
-
+    }));
 
     await tx.field.deleteMany({
       where: { form_id: formId },
     });
 
-    const createdFields = await tx.field.createMany({
+    // Create all fields first
+    await tx.field.createMany({
       data: bulkAddFields,
     });
 
-    await tx.fieldOption.createMany({
-      data: bulkAddFieldsForOptions
-        .filter(field => field.options && field.options.length > 0)
-        .map((field,) => ({
-          field_id: (createdFields as any).id,
-          name: field.options![0],
-        })),
+    // Fetch the created fields to get their IDs
+    const createdFields = await tx.field.findMany({
+      where: { form_id: formId },
     });
+
+    // Create field options by matching fields by name
+    const fieldOptionsToCreate = form.object.fields
+      .filter((field: CreateFieldDto) => field.options && field.options.length > 0)
+      .flatMap((field: CreateFieldDto) => {
+        const createdField = createdFields.find(cf => cf.name === field.name);
+        if (!createdField) return [];
+
+        return field.options!.map((optionName: string) => ({
+          field_id: createdField.id,
+          name: optionName,
+        }));
+      });
+
+    if (fieldOptionsToCreate.length > 0) {
+      await tx.fieldOption.createMany({
+        data: fieldOptionsToCreate,
+      });
+    }
 
     return updated;
   });
