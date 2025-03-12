@@ -169,7 +169,6 @@ const generateFromPrompt = async (userId: string, formId: string, form: any) => 
       name: field.name,
       type: field.type,
       required: field.required,
-      options: field.options,
       order: field.order,
       label: field.label,
     })) as CreateFieldDto[];
@@ -178,8 +177,17 @@ const generateFromPrompt = async (userId: string, formId: string, form: any) => 
       where: { form_id: formId },
     });
 
-    await tx.field.createMany({
+    const createdFields = await tx.field.createMany({
       data: bulkAddFields,
+    });
+
+    await tx.fieldOption.createMany({
+      data: bulkAddFields
+        .filter(field => field.options && field.options.length > 0)
+        .map((field,) => ({
+          field_id: (createdFields as any).id,
+          name: field.options![0],
+        })),
     });
 
     return updated;
