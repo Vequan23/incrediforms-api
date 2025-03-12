@@ -71,6 +71,14 @@ const deletePromptFile = async (req: RequestWithUser, res: Response) => {
   res.status(STATUS_CODES.OK).json(promptFile);
 };
 
+const generateFromPrompt = async (req: RequestWithUser, res: Response) => {
+  const userId = req.user!.id;
+  const formId = req.params.id;
+  const form = await formsService.generateFromPrompt(userId, formId, req.body);
+
+  res.status(STATUS_CODES.OK).json(form);
+};
+
 export default {
   create: asyncWrapper(create),
   update: asyncWrapper(update),
@@ -81,4 +89,5 @@ export default {
   getPublishedForm: asyncWrapper(getPublishedForm),
   createPromptFile: asyncWrapper(createPromptFile),
   deletePromptFile: asyncWrapper(deletePromptFile),
+  generateFromPrompt: asyncWrapper(generateFromPrompt),
 };

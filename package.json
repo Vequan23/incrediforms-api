@@ -20,6 +20,7 @@
     "@langchain/core": "^0.3.31",
     "@langchain/openai": "^0.3.17",
     "@prisma/client": "^5.21.1",
+    "@slack/bolt": "^4.2.1",
     "@types/cookie-parser": "^1.4.8",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",

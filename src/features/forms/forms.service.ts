@@ -3,6 +3,8 @@ import { CreateFormDto, CreatePromptFileDto, UpdateFormDto } from './forms.model
 import { STATUS_CODES } from '@/src/lib/constants/statusCodes.constants';
 import { ApiError } from '@/src/lib/utils/apiError';
 import { extractTextFromBase64Pdf } from './extractTextFromBase64Pdf';
+import { Field } from '@prisma/client';
+import { CreateFieldDto } from './fields/fields.models';
 
 const createForm = async (userId: string, form: CreateFormDto) => {
   return db.form.create({
@@ -152,6 +154,44 @@ const deletePromptFile = async (formId: string, promptFileId: string) => {
   });
 };
 
+const generateFromPrompt = async (userId: string, formId: string, form: any) => {
+  const formBody = {
+    name: form.object.name,
+    description: form.object.description,
+    prompt: form.object.submissionPrompt,
+  } as UpdateFormDto;
+
+  const updatedForm = await db.$transaction(async (tx) => {
+    const updated = await updateForm(userId, formId, formBody);
+
+    const bulkAddFields = form.object.fields.map((field: CreateFieldDto) => ({
+      form_id: formId,
+      name: field.name,
+      type: field.type,
+      required: field.required,
+      options: field.options,
+      order: field.order,
+      label: field.label,
+    })) as CreateFieldDto[];
+
+    await tx.field.deleteMany({
+      where: { form_id: formId },
+    });
+
+    await tx.field.createMany({
+      data: bulkAddFields,
+    });
+
+    return updated;
+  });
+
+  if (!updatedForm) {
+    throw new ApiError(STATUS_CODES.BAD_REQUEST, 'Form not found');
+  }
+
+  return updatedForm;
+};
+
 export default {
   createForm,
   updateForm,
@@ -162,4 +202,5 @@ export default {
   getPublishedForm,
   createPromptFile,
   deletePromptFile,
+  generateFromPrompt,
 };

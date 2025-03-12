@@ -106,4 +106,10 @@ router
 //   .route('/scheduled-reports/reset')
 //   .post(scheduledReportsController.resetAllCronJobs);
 
+
+//Form generation routes
+router
+  .route('/:id/generate')
+  .post(requiresAuthMiddleware, formsController.generateFromPrompt);
+
 export default router;
