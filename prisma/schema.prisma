@@ -38,6 +38,9 @@ model Form {
   prompt        String?
   file          String?
   theme_color   String?
+  page_color    String?
+  submit_button_color String?
+  submit_button_text_color String?
   created_at    DateTime        @default(now())
   Field         Field[]
   Submission    Submission[]

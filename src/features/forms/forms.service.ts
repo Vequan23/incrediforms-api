@@ -4,7 +4,6 @@ import { STATUS_CODES } from '@/src/lib/constants/statusCodes.constants';
 import { ApiError } from '@/src/lib/utils/apiError';
 import { extractTextFromBase64Pdf } from './extractTextFromBase64Pdf';
 import { CreateFieldDto } from './fields/fields.models';
-import { options } from 'joi';
 
 const createForm = async (userId: string, form: CreateFormDto) => {
   return db.form.create({

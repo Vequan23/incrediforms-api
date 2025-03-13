@@ -20,6 +20,10 @@ interface UpdateFormDto {
   prompt?: string;
   file?: string;
   webhook_url?: string;
+  theme_color?: string;
+  page_color?: string;
+  submit_button_color?: string;
+  submit_button_text_color?: string;
 }
 
 interface UpdateFormResponse {
