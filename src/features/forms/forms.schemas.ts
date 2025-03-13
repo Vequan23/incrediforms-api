@@ -13,6 +13,7 @@ const UPDATE_FORM_SCHEMA = Joi.object({
   prompt: Joi.string().optional().allow(''),
   file: Joi.string().allow(null).optional(),
   theme_color: Joi.string().optional(),
+  webhook_url: Joi.string().optional(),
   page_color: Joi.string().optional(),
   submit_button_color: Joi.string().optional(),
   submit_button_text_color: Joi.string().optional(),
