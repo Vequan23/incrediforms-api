@@ -11,6 +11,7 @@ export const INPUT_TYPES = [
   'checkbox',
   'file',
   'textarea',
+  'phone'
 ];
 
 export const CREATE_FIELD_SCHEMA = Joi.object({
